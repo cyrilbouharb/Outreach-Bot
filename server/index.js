@@ -42,6 +42,7 @@ app.post('/signup', async (req, res) => {
 
 const jwt = require('jsonwebtoken');
 
+// for login 
 app.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -62,7 +63,7 @@ app.post('/login', async (req, res) => {
 
     // Generate and return JWT
     const token = jwt.sign({ id: user.rows[0].id }, "yourSecretKey", { expiresIn: "1h" }); // Replace "yourSecretKey" with a real secret key
-    res.json({ token });
+    res.json({ username: user.rows[0].username, token });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");

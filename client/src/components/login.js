@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import {useNavigate} from 'react-router-dom';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const history = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -13,7 +15,11 @@ function Login() {
         password
       });
       console.log(response.data);
+      const { username, token } = response.data;
       // Handle successful login (e.g., store token, redirect)
+      localStorage.setItem('username', username);
+      localStorage.setItem('token', token);      
+      history('/welcome');
     } catch (error) {
       console.error('Login error:', error.response.data);
       // Handle errors (e.g., incorrect credentials)

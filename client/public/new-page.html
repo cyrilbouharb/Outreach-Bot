@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+</head>
+<body>
+    <h1>Welcome</h1>
+    <div id="username"></div>
+
+    <script>
+        // Fetch the token from cookie
+        const token = document.cookie.split('; ').find(row => row.startsWith('token')).split('=')[1];
+
+        // Decode the token to get user information
+        const decodedToken = JSON.parse(atob(token.split('.')[1]));
+        
+        // Display the username
+        document.getElementById('username').textContent = `Hello, ${decodedToken.username}!\n`;
+    </script>
+</body>
+</html>
