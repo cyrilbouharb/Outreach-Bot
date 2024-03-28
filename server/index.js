@@ -11,6 +11,8 @@ const bcrypt = require('bcrypt');
 
 // Assuming you have a users table with username, email, and hashed_password columns
 
+//Method for signup
+
 app.post('/signup', async (req, res) => {
   try {
     console.log("Received signup request", req.body); // Log the request body
@@ -42,6 +44,8 @@ app.post('/signup', async (req, res) => {
 
 const jwt = require('jsonwebtoken');
 
+//method for a user to login
+
 app.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -70,6 +74,6 @@ app.post('/login', async (req, res) => {
 });
 
 
-app.listen(5000, () => {
-    console.log("server has started on port 5000")
+app.listen(4999, () => {
+    console.log("server has started on port 4999")
 });
