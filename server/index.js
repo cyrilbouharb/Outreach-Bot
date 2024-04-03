@@ -4,6 +4,32 @@ const cors = require("cors");
 const pool = require("./db")
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
+
+const uploadDirectory = 'ResumeUploads/';
+
+const ensureUploadFolderExists = (dir) => {
+  const resolvedDir = path.resolve(dir);
+  if (!fs.existsSync(resolvedDir)) {
+    fs.mkdirSync(resolvedDir, { recursive: true });
+  }
+};
+
+ensureUploadFolderExists(uploadDirectory);
+
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, uploadDirectory);
+  },
+  filename: function(req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + '-' + file.originalname);
+  }
+});
+
+const upload = multer({ storage: storage });
+
 app.use(cors());
 app.use(express.json());
 
@@ -66,6 +92,19 @@ app.post('/login', async (req, res) => {
     res.status(500).send("Server error");
   }
 });
+
+app.post('/uploadResume', upload.single('resume'), async (req, res) => {
+  try {
+    // access the file using req.file
+    // TODO: Make sure uploadResume can only be used by authorized users.  
+    console.log(req.file);
+    res.send('Resume uploaded successfully');
+  } catch (error) {
+    console.error('Upload Error:', error.message);
+    res.status(500).send("Server error during file upload");
+  }
+});
+
 
 app.listen(5000, () => {
     console.log("server has started on port 5000")
