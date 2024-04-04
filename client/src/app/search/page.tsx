@@ -13,6 +13,7 @@ import {
   Text,
   useColorModeValue,
   Link,
+  SimpleGrid,
 } from "@chakra-ui/react";
 
 export default function SimpleCard() {
@@ -23,9 +24,9 @@ export default function SimpleCard() {
       justify={"center"}
       bg={useColorModeValue("gray.50", "gray.800")}
     >
-      <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
-        <Stack align={"center"}>
-          <Heading fontSize={"4xl"}>Sign in to your account</Heading>
+      <Stack spacing={8} mx={"auto"} w="70%" py={12} px={6}>
+        <Stack align={"left"}>
+          <Heading fontSize={"4xl"}>Filter Request</Heading>
         </Stack>
         <Box
           rounded={"lg"}
@@ -34,27 +35,33 @@ export default function SimpleCard() {
           p={8}
         >
           <Stack spacing={4}>
-            <FormControl id="email">
-              <FormLabel>Email address</FormLabel>
-              <Input type="email" />
+            <FormControl id="Industry">
+              <FormLabel>Industry</FormLabel>
+              <Input />
+            </FormControl>
+            <FormControl id="Organization">
+              <FormLabel>Organization</FormLabel>
+              <Input />
+            </FormControl>
+            <FormControl id="Position">
+              <FormLabel>Position</FormLabel>
+              <Input />
+            </FormControl>
+            <FormControl id="Seniority">
+              <FormLabel>Seniority</FormLabel>
+              <Input />
+            </FormControl>
+            <FormControl id="Location">
+              <FormLabel>Location</FormLabel>
+              <Input />
+            </FormControl>
+            <FormControl id="Degree">
+              <FormLabel>Degree</FormLabel>
+              <Input />
             </FormControl>
 
-            <FormControl id="password">
-              <FormLabel>Password</FormLabel>
-              <Input type="password" />
-            </FormControl>
-
-            
             <Stack spacing={10}>
-              <Stack
-                direction={{ base: "column", sm: "row" }}
-                align={"start"}
-                justify={"space-between"}
-              >
-                <Checkbox>Remember me</Checkbox>
-                <Text color={"blue.400"}>Forgot password?</Text>
-              </Stack>
-              <Link href="/home">
+              <Link href="/display_results">
                 <Button
                   loadingText="Submitting"
                   size="lg"
@@ -65,11 +72,11 @@ export default function SimpleCard() {
                   }}
                   width="100%"
                 >
-                  Sign in
+                  Find Candidates
                 </Button>
               </Link>
               <Text>
-                <Link href="/#browse-anchor" color={"black.400"}>
+                <Link href="/home" color={"black.400"}>
                   Back
                 </Link>
               </Text>
