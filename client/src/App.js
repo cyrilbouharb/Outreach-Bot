@@ -4,8 +4,8 @@ import { BrowserRouter as Router, Route,Routes} from 'react-router-dom';
 import Login from './components/login';
 import Signup from './components/signup';
 import Welcome from './components/Welcome';
-
-
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 
 // function App() {
 //   return (
@@ -24,6 +24,8 @@ function App() {
         <Route path='/'  element={<div><Login /><Signup /></div>} />
         {/* <Route path='/' element={<Signup/>} /> */}
         <Route path='/welcome' element={<Welcome/>} />
+        <Route path = '/forgot-password' element= {<ForgotPassword/>} />
+        <Route path = "/reset-password/:id/:token" element= {<ResetPassword/>}></Route>
       </Routes>
     </Router>
   );
