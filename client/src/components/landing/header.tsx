@@ -13,14 +13,11 @@ export default function Nav() {
 
   return (
     <>
-      <Box px={4} pt={5}>
-        <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-
-          {/* CHANGE LOGO HERE */}
+      <Box px={4} pt={3} pb={3}>
+        <Flex h={20} alignItems={"center"} justifyContent={"space-between"}>
           <Image
-            
-            height={100}
-            width={100}
+            height={80}
+            width={130}
             src={logo}
             alt=" logo"
             onClick={() => {
@@ -30,7 +27,7 @@ export default function Nav() {
           />
 
           <Flex alignItems={"center"}>
-            <Stack direction={"row"} spacing={7}>
+            <Stack direction={"row"} spacing={10}>
               <Button onClick={toggleColorMode}>
                 {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
               </Button>

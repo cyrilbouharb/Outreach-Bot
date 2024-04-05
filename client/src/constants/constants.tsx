@@ -214,19 +214,19 @@ export const VINYL_RECORD = (props: any) => (
 
 export const WIDGET_DISPLAY_SCHEMA: WidgetDisplay[] = [
   {
-    id: "networking",
-    title: "Networking Platform",
+    id: "log",
+    title: "Activities Log",
     img: MediumImg,
     description:
-      "Discover networking hub showcasing individuals from diverse fields of expertise.",
-    path: "/build/medium",
+      "Stay on track with our Activities Log - your timeline for connections and progress",
+    path: "/network",
   },
   {
     id: "filtering",
     title: "Filtering Feature",
     img: StockImg,
-    description: "A filter and search platform for individuals based on sepcific preferences.",
-    path: "/build/stock",
+    description: "A filter and search platform for individuals based on specific preferences.",
+    path: "/filter",
   },
   {
     id: "mailing",
@@ -234,7 +234,7 @@ export const WIDGET_DISPLAY_SCHEMA: WidgetDisplay[] = [
     img: SpotifyImg,
     description:
       "Evaluate communication with professional email template based on preferences",
-    path: "/build/spotify",
+    path: "/mail",
   },
 
   // {

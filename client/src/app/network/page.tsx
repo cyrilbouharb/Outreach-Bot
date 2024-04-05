@@ -1,8 +1,8 @@
-export default function Login() {
+export default function Network() {
   return (
     <div>
-      <h1>Hello, Network Page!</h1>
-      <h1>Information about potential networking opportunities will be display here!</h1>
+      <h1>Hello, Activity log!</h1>
+      <h1>Information about activity log</h1>
     </div>
   );
 }

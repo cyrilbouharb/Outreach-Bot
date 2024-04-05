@@ -1,4 +1,4 @@
-export default function Login() {
+export default function Profile() {
   return (
     <div>
       <h1>Hello, Network Page!</h1>
