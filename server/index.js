@@ -8,9 +8,9 @@ app.use(express.json());
 
 //Routes//
 const bcrypt = require('bcrypt');
+const apolloRouter = require('./apollo');
 
 // Assuming you have a users table with username, email, and hashed_password columns
-
 app.post('/signup', async (req, res) => {
   try {
     console.log("Received signup request", req.body); // Log the request body
@@ -70,7 +70,9 @@ app.post('/login', async (req, res) => {
   }
 });
 
+//A method to route from index.js to apollo.js to use the apollo endpoints
+app.use('./apollo', apolloRouter); 
 
-app.listen(5000, () => {
-    console.log("server has started on port 5000")
+app.listen(4999, () => {
+    console.log("server has started on port 4999")
 });
