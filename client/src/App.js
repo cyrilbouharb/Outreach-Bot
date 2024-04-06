@@ -6,6 +6,7 @@ import Signup from './components/signup';
 import Welcome from './components/Welcome';
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
+import EmailVerification from './components/EmailVerification';
 
 // function App() {
 //   return (
@@ -25,6 +26,7 @@ function App() {
         {/* <Route path='/' element={<Signup/>} /> */}
         <Route path='/welcome' element={<Welcome/>} />
         <Route path = '/forgot-password' element= {<ForgotPassword/>} />
+        <Route path="/verify-email" element={<EmailVerification />} />
         <Route path = "/reset-password/:id/:token" element= {<ResetPassword/>}></Route>
       </Routes>
     </Router>
