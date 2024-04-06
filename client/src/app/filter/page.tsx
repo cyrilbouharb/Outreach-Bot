@@ -39,7 +39,7 @@ export default function SimpleCard() {
             // onClick={() => {
             //   router.push("/");
             // }}
-            style={{ cursor: "pointer" }}
+            //style={{ cursor: "pointer" }}
           />
         </Flex>
     </>

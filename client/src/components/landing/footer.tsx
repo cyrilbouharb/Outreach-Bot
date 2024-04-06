@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   Box,
   chakra,
@@ -8,10 +8,7 @@ import {
   useColorModeValue,
   VisuallyHidden,
 } from "@chakra-ui/react";
-import {
-  FaGithub,
-  FaUser,
-} from "react-icons/fa";
+import { FaGithub, FaUser } from "react-icons/fa";
 import { ReactNode } from "react";
 import { useRouter } from "next/navigation";
 
@@ -64,23 +61,13 @@ export default function Footer() {
         justify={{ base: "center", md: "space-between" }}
         align={{ base: "center", md: "center" }}
       >
-        <Text>© 2023 All rights reserved.</Text>
+        <Text>© 2024 All rights reserved.</Text>
         <Stack direction={"row"} spacing={6} align={"center"}>
-          <Text
-            onClick={() => {
-              router.push("/disclaimers");
-            }}
-            cursor={"pointer"}
-            fontSize={"sm"}
-            as={'u'}
+          <SocialButton
+            label={"Github"}
+            href={"https://github.com/cyrilbouharb/Outreach-Bot"}
           >
-            Disclaimers
-          </Text>
-          <SocialButton label={"Github"} href={"https://github.com/pane2004"}>
             <FaGithub />
-          </SocialButton>
-          <SocialButton label={"Website"} href={"https://alexlu.ca"}>
-            <FaUser />
           </SocialButton>
         </Stack>
       </Container>

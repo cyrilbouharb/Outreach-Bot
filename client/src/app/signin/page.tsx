@@ -54,7 +54,7 @@ export default function SimpleCard() {
                 <Checkbox>Remember me</Checkbox>
                 <Text color={"blue.400"}>Forgot password?</Text>
               </Stack>
-              <Link href="/home">
+              <Link href="/">
                 <Button
                   loadingText="Submitting"
                   size="lg"
@@ -69,7 +69,7 @@ export default function SimpleCard() {
                 </Button>
               </Link>
               <Text>
-                <Link href="/#browse-anchor" color={"black.400"}>
+                <Link href="/" color={"black.400"}>
                   Back
                 </Link>
               </Text>
