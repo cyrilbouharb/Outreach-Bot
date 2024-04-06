@@ -1,0 +1,70 @@
+/* Settings.css */
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Use the full height of the viewport */
+  font-family: Arial, sans-serif; /* Example font */
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  width: 100%; /* Adjust width to be more responsive */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add some shadow for depth */
+  padding: 20px;
+  border-radius: 8px; /* Slightly rounded corners */
+  background-color: #fff; /* Light background */
+}
+
+.settings-form div {
+  margin-bottom: 20px;
+}
+
+.settings-form label {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.settings-form input[type="text"],
+.settings-form input[type="email"],
+.settings-form input[type="file"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc; /* Subtle border */
+  border-radius: 4px; /* Match the input radius to form */
+}
+
+.settings-form button {
+  cursor: pointer;
+  background-color: #007bff; /* A nice blue */
+  color: #ffffff; /* White text */
+  border: none;
+  padding: 10px;
+  border-radius: 4px; /* Consistency with inputs */
+  font-size: 16px; /* Slightly larger text */
+  margin-top: 10px; /* Extra space above the button */
+}
+
+.settings-form button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Adjust the logout button to match the save settings button */
+.logout-btn {
+  background-color: #dc3545; /* A different color for distinction */
+  color: #ffffff;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%; /* Full width of the form container */
+  max-width: 400px; /* Match the form's max width */
+}
+
+.logout-btn:hover {
+  background-color: #bb2d3b; /* Darker shade on hover */
+}
