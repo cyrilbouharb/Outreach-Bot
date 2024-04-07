@@ -25,13 +25,13 @@ export default function SimpleCard() {
     >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
-          <Heading fontSize={"4xl"}>Sign in to your account</Heading>
+          <Heading fontSize={"4xl"}>Forgot Password</Heading>
         </Stack>
         <Box
           rounded={"lg"}
           bg={useColorModeValue("white", "gray.700")}
           boxShadow={"lg"}
-          p={8}
+          p={5}
         >
           <Stack spacing={4}>
             <FormControl id="email">
@@ -39,22 +39,13 @@ export default function SimpleCard() {
               <Input type="email" />
             </FormControl>
 
-            <FormControl id="password">
-              <FormLabel>Password</FormLabel>
-              <Input type="password" />
-            </FormControl>
-
-            
             <Stack spacing={10}>
               <Stack
                 direction={{ base: "column", sm: "row" }}
                 align={"start"}
                 justify={"space-between"}
-              >
-                <Checkbox>Remember me</Checkbox>
-                <Link color={"blue.400"} href="/forgot_password">Forgot password?</Link>
-              </Stack>
-              <Link href="/">
+              ></Stack>
+              <Link href="/reset_password">
                 <Button
                   loadingText="Submitting"
                   size="lg"
@@ -65,11 +56,11 @@ export default function SimpleCard() {
                   }}
                   width="100%"
                 >
-                  Sign in
+                  Reset Password
                 </Button>
               </Link>
               <Text>
-                <Link href="/" color={"black.400"}>
+                <Link href="/signin" color={"black.400"}>
                   Back
                 </Link>
               </Text>
