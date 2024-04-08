@@ -10,8 +10,8 @@ const { body, validationResult } = require('express-validator');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
-
 const uploadDirectory = 'ResumeUploads/';
+app.use('/resumes', express.static('ResumeUploads'));
 
 const ensureUploadFolderExists = (dir) => {
   const resolvedDir = path.resolve(dir);
@@ -46,11 +46,11 @@ var transporter = nodemailer.createTransport({
   }
 });
 
-const validateSignup = [
-  body('username').trim().not().isEmpty().withMessage('Username is required'),
-  body('email').isEmail().withMessage('Must be a valid email address'),
-  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
-];
+// const validateSignup = [
+//   body('username').trim().not().isEmpty().withMessage('Username is required'),
+//   body('email').isEmail().withMessage('Must be a valid email address'),
+//   body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+// ];
 
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
@@ -71,17 +71,14 @@ function authenticateToken(req, res, next) {
 
 
 
-// app.post('/signup', validateSignup, async (req, res) => {
-//   const errors = validationResult(req);
-//   if (!errors.isEmpty()) {
-//     return res.status(400).json({ errors: errors.array() });
-//   }
-
+app.post('/signup', async (req, res) => {
   try {
-    console.log("Received signup request", req.body); 
+    console.log("Received signup request", req.body);
     const { username, email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10); 
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const verificationToken = uuidv4(); // Generate a unique verification token
 
+    // Insert user into database with verification token
     const newUser = await pool.query(
       "INSERT INTO users (username, email, encrypted_password, verification_token) VALUES ($1, $2, $3, $4) RETURNING *",
       [username, email, hashedPassword, verificationToken]
@@ -103,74 +100,105 @@ function authenticateToken(req, res, next) {
       }
     });
 
-    res.json(newUser.rows[0]);
+    res.json(newUser.rows[0]);;
   } catch (error) {
     console.error('Signup Error:', error);
     res.status(500).send("Server error");
-  } 
-});
+  }
+}); // This closing bracket and parenthesis were missing in your snippet, causing syntax issues.
 
 
 
 // for login 
 app.post('/login', async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
   try {
     const { email, password } = req.body;
 
-    // Check if user exists and if their email has been verified
-    const user = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
-
-    if (user.rows.length === 0) {
-      return res.status(401).json("Invalid Credentials or User Not Found.");
+    // Check if user exists
+    const userResult = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+    const user = userResult.rows[0];
+    
+    if (!user) {
+      return res.status(401).json({ message: "Invalid Credentials or User Not Found." });
     }
 
     // Check if the user's email is verified
-    if (!user.rows[0].email_verified) {
-      return res.status(403).json("Please verify your email before logging in.");
+    if (!user.email_verified) {
+      return res.status(403).json({ message: "Please verify your email before logging in." });
     }
 
-    const validPassword = await bcrypt.compare(password, user.rows[0].encrypted_password);
+    // Check if submitted password matches the stored hash
+    const validPassword = await bcrypt.compare(password, user.encrypted_password);
     if (!validPassword) {
-      return res.status(401).json("Invalid Credentials.");
+      return res.status(401).json({ message: "Invalid Credentials." });
     }
 
-    const token = jwt.sign({ id: user.rows[0].id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-    res.json({ token });
+    // Generate and return JWT
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    res.json({ token: token, message: "Login successful" });
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server error");
+    res.status(500).send({ message: "Server error" });
   }
 });
 
-app.post('/uploadResume', authenticateToken, upload.single('resume'), async (req, res) => {
-  if (!req.file) {
-    return res.status(400).send("No file uploaded");
+app.post('/uploadResume', upload.single('resume'), async (req, res) => {
+  // Extract the token from the Authorization header
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).send("No token provided, user must be logged in");
   }
 
-  const userId = req.user.id;
-  try {
-    const { path, originalname, mimetype, size } = req.file;
-    
-    const insertQuery = `
-      INSERT INTO resumes (user_id, file_name, file_path, mime_type, size)
-      VALUES ($1, $2, $3, $4, $5)
-      RETURNING *;
-    `;
-    
-    console.log("Attempting to insert resume for user ID:", userId);
-    
-    const newResume = await pool.query(insertQuery, [userId, originalname, path, mimetype, size]);
-    res.json({ message: "Resume uploaded successfully", file: newResume.rows[0] });
-  } catch (error) {
-    console.error('Upload Error:', error.message);
-    res.status(500).send("Server error during file upload");
-  }
+  // Verify the token
+  jwt.verify(token, process.env.JWT_SECRET, async (err, user) => {
+    if (err) {
+      return res.status(403).send("Token is invalid or expired");
+    }
+
+    // If token is valid, proceed with the file upload process
+    if (!req.file) {
+      return res.status(400).send("No file uploaded");
+    }
+
+    const userId = user.id; // Assuming your JWT token payload includes the user ID
+    try {
+      const { path, originalname, mimetype, size } = req.file;
+      
+      const insertQuery = `
+        INSERT INTO resumes (user_id, file_name, file_path, mime_type, size)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING *;
+      `;
+      
+      console.log("Attempting to insert resume for user ID:", userId);
+      
+      const newResume = await pool.query(insertQuery, [userId, originalname, path, mimetype, size]);
+      res.json({ message: "Resume uploaded successfully", file: newResume.rows[0] });
+    } catch (error) {
+      console.error('Upload Error:', error.message);
+      res.status(500).send("Server error during file upload");
+    }
+  });
 });
 
+// hold off for now
+
+// app.get('/api/resumes', async (req, res) => {
+//   try {
+//     const queryResult = await pool.query('SELECT id, file_name, file_path, mime_type, size, created_at, updated_at FROM resumes');
+//     const resumes = queryResult.rows.map(resume => ({
+//       ...resume,
+//       url: `http://localhost:5000/resumes/${resume.file_name}` // Assuming file_name stores the actual file's name on disk
+//     }));
+    
+//     res.json(resumes);
+//   } catch (err) {
+//     console.error('Error fetching resumes:', err);
+//     res.status(500).send("Server error");
+//   }
+// });
 
 
 
@@ -215,7 +243,7 @@ app.post('/forgot-password', async (req, res) => {
           }
         });
   
-})
+});
 
 app.post('/reset-password/:id/:token', (req, res) => {
   const {id, token} = req.params
@@ -234,7 +262,7 @@ app.post('/reset-password/:id/:token', (req, res) => {
   catch (error){
     res.send({Status: error})
   }
-})
+});
 
 app.get('/verify-email', async (req, res) => {
   try {
