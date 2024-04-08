@@ -6,7 +6,32 @@ const nodemailer = require('nodemailer')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid'); // Add this for generating UUIDs
+const { body, validationResult } = require('express-validator');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 
+const uploadDirectory = 'ResumeUploads/';
+
+const ensureUploadFolderExists = (dir) => {
+  const resolvedDir = path.resolve(dir);
+  if (!fs.existsSync(resolvedDir)) {
+    fs.mkdirSync(resolvedDir, { recursive: true });
+  }
+};
+
+ensureUploadFolderExists(uploadDirectory);
+
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, uploadDirectory);
+  },
+  filename: function(req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + '-' + file.originalname);
+  }
+});
+
+const upload = multer({ storage: storage });
 
 app.use(cors());
 app.use(express.json());
@@ -21,15 +46,42 @@ var transporter = nodemailer.createTransport({
   }
 });
 
+const validateSignup = [
+  body('username').trim().not().isEmpty().withMessage('Username is required'),
+  body('email').isEmail().withMessage('Must be a valid email address'),
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+];
 
-app.post('/signup', async (req, res) => {
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.sendStatus(401);
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.sendStatus(403);
+    }
+    req.user = user;
+    next();
+  });
+}
+
+
+
+// app.post('/signup', validateSignup, async (req, res) => {
+//   const errors = validationResult(req);
+//   if (!errors.isEmpty()) {
+//     return res.status(400).json({ errors: errors.array() });
+//   }
+
   try {
-    console.log("Received signup request", req.body);
+    console.log("Received signup request", req.body); 
     const { username, email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const verificationToken = uuidv4(); // Generate a unique verification token
+    const hashedPassword = await bcrypt.hash(password, 10); 
 
-    // Insert user into database with verification token
     const newUser = await pool.query(
       "INSERT INTO users (username, email, encrypted_password, verification_token) VALUES ($1, $2, $3, $4) RETURNING *",
       [username, email, hashedPassword, verificationToken]
@@ -62,6 +114,10 @@ app.post('/signup', async (req, res) => {
 
 // for login 
 app.post('/login', async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   try {
     const { email, password } = req.body;
 
@@ -77,20 +133,45 @@ app.post('/login', async (req, res) => {
       return res.status(403).json("Please verify your email before logging in.");
     }
 
-    // Check if submitted password matches the stored hash
     const validPassword = await bcrypt.compare(password, user.rows[0].encrypted_password);
     if (!validPassword) {
       return res.status(401).json("Invalid Credentials.");
     }
 
-    // Generate and return JWT
-    const token = jwt.sign({ id: user.rows[0].id }, "yourSecretKey", { expiresIn: "1h" }); // Remember to replace "yourSecretKey" with a real secret key, and preferably store it in an environment variable
-    res.json({ username: user.rows[0].username, token });
+    const token = jwt.sign({ id: user.rows[0].id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    res.json({ token });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
   }
 });
+
+app.post('/uploadResume', authenticateToken, upload.single('resume'), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).send("No file uploaded");
+  }
+
+  const userId = req.user.id;
+  try {
+    const { path, originalname, mimetype, size } = req.file;
+    
+    const insertQuery = `
+      INSERT INTO resumes (user_id, file_name, file_path, mime_type, size)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING *;
+    `;
+    
+    console.log("Attempting to insert resume for user ID:", userId);
+    
+    const newResume = await pool.query(insertQuery, [userId, originalname, path, mimetype, size]);
+    res.json({ message: "Resume uploaded successfully", file: newResume.rows[0] });
+  } catch (error) {
+    console.error('Upload Error:', error.message);
+    res.status(500).send("Server error during file upload");
+  }
+});
+
+
 
 
 
