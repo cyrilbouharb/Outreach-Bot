@@ -27,7 +27,7 @@ const storage = multer.diskStorage({
     cb(null, uploadDirectory);
   },
   filename: function(req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + '-' + file.originalname);
+    cb(null, file.originalname);
   }
 });
 
@@ -185,20 +185,20 @@ app.post('/uploadResume', upload.single('resume'), async (req, res) => {
 
 // hold off for now
 
-// app.get('/api/resumes', async (req, res) => {
-//   try {
-//     const queryResult = await pool.query('SELECT id, file_name, file_path, mime_type, size, created_at, updated_at FROM resumes');
-//     const resumes = queryResult.rows.map(resume => ({
-//       ...resume,
-//       url: `http://localhost:5000/resumes/${resume.file_name}` // Assuming file_name stores the actual file's name on disk
-//     }));
+app.get('/api/resumes', async (req, res) => {
+  try {
+    const queryResult = await pool.query('SELECT id, file_name, file_path, mime_type, size, created_at, updated_at FROM resumes');
+    const resumes = queryResult.rows.map(resume => ({
+      ...resume,
+      url: `http://localhost:5000/resumes/${resume.file_name}` // Assuming file_name stores the actual file's name on disk
+    }));
     
-//     res.json(resumes);
-//   } catch (err) {
-//     console.error('Error fetching resumes:', err);
-//     res.status(500).send("Server error");
-//   }
-// });
+    res.json(resumes);
+  } catch (err) {
+    console.error('Error fetching resumes:', err);
+    res.status(500).send("Server error");
+  }
+});
 
 
 
