@@ -18,48 +18,52 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { useRouter } from "next/navigation";
 
 export default function SignupCard() {
   const [showPassword, setShowPassword] = useState(false);
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
-  const [last_name, setLastName] = useState('');
-  const [first_name, setFirstName] = useState('');
-  const [errorMessage, setErrorMessage] = useState(''); // For displaying error messages
-  const [successMessage, setSuccessMessage] = useState(''); // For displaying success message
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [last_name, setLastName] = useState("");
+  const [first_name, setFirstName] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // For displaying error messages
+  const [successMessage, setSuccessMessage] = useState(""); // For displaying success message
+
+  const router = useRouter();
 
   const handleSignup = async (e) => {
-
     e.preventDefault();
-    setErrorMessage(''); // Reset error message
-    setSuccessMessage(''); // Reset success message
+    setErrorMessage(""); // Reset error message
+    setSuccessMessage(""); // Reset success message
     console.log("Signup attempted");
     try {
-      const response = await fetch('http://localhost:5000/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, first_name, last_name}),
+      const response = await fetch("http://localhost:5000/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ first_name, last_name, email, password }),
       });
 
       if (!response.ok) {
-        throw new Error('Signup request failed with status: ' + response.status);
+        throw new Error(
+          "Signup request failed with status: " + response.status
+        );
       }
 
       const data = await response.json();
       console.log(data);
-      setSuccessMessage('Signup successful! Please log in.'); // Set success message
+      setSuccessMessage("Signup successful! Please log in."); // Set success message
       // Reset form fields
-      setEmail('');
-      setPassword('');
-      setUsername('');
-      setLastName('');
+      setEmail("");
+      setPassword("");
+      setFirstName("");
+      setLastName("");
+      router.push("/");
       // Optionally, redirect the user or update the UI further here
     } catch (error) {
-      console.error('Signup error:', error.message);
+      console.error("Signup error:", error.message);
       //setErrorMessage(error.message); // Display error message on UI
-
     }
   };
 
@@ -87,11 +91,11 @@ export default function SignupCard() {
               <Box>
                 <FormControl id="firstName" isRequired>
                   <FormLabel>First Name</FormLabel>
-                  <Input 
+                  <Input
                     type="text"
                     placeholder="First Name"
                     value={first_name}
-                    onChange={(e) => setUsername(e.target.value)}
+                    onChange={(e) => setFirstName(e.target.value)}
                   />
                 </FormControl>
               </Box>
@@ -102,13 +106,14 @@ export default function SignupCard() {
                     type="text"
                     placeholder="Last Name"
                     value={last_name}
-                    onChange={(e) => setLastName(e.target.value)}/>
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
                 </FormControl>
               </Box>
             </HStack>
             <FormControl id="email" isRequired>
               <FormLabel>Email address</FormLabel>
-              <Input 
+              <Input
                 type="email"
                 placeholder="Email"
                 value={email}
@@ -118,7 +123,7 @@ export default function SignupCard() {
             <FormControl id="password" isRequired>
               <FormLabel>Password</FormLabel>
               <InputGroup>
-                <Input 
+                <Input
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   value={password}
@@ -137,21 +142,19 @@ export default function SignupCard() {
               </InputGroup>
             </FormControl>
             <Stack spacing={10} pt={2}>
-              <Link href="/#browse-anchor">
-                <Button
-                  loadingText="Submitting"
-                  size="lg"
-                  bg={"blue.400"}
-                  color={"white"}
-                  _hover={{
-                    bg: "blue.500",
-                  }}
-                  width="100%"
-                  onClick={handleSignup}
-                >
-                  Sign up
-                </Button>
-              </Link>
+              <Button
+                loadingText="Submitting"
+                size="lg"
+                bg={"blue.400"}
+                color={"white"}
+                _hover={{
+                  bg: "blue.500",
+                }}
+                width="100%"
+                onClick={handleSignup}
+              >
+                Sign up
+              </Button>
             </Stack>
             <Stack pt={6}>
               <Text align={"center"}>
