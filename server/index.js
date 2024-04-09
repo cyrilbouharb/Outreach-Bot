@@ -74,16 +74,15 @@ function authenticateToken(req, res, next) {
 app.post('/signup', async (req, res) => {
   try {
     console.log("Received signup request", req.body);
-    const { username, email, password } = req.body;
+    const { first_name, last_name, username, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const verificationToken = uuidv4(); // Generate a unique verification token
 
     // Insert user into database with verification token
     const newUser = await pool.query(
-      "INSERT INTO users (username, email, encrypted_password, verification_token) VALUES ($1, $2, $3, $4) RETURNING *",
-      [username, email, hashedPassword, verificationToken]
+      "INSERT INTO users (first_name, last_name, email, encrypted_password, verification_token) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      [first_name, last_name, email, hashedPassword, verificationToken]
     );
-
     // Send verification email
     var mailOptions = {
       from: 'outreachbot@gmail.com',
