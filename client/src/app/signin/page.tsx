@@ -1,4 +1,7 @@
 "use client";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useRouter } from "next/navigation";
 
 import {
   Flex,
@@ -16,6 +19,37 @@ import {
 } from "@chakra-ui/react";
 
 export default function SimpleCard() {
+  const router = useRouter();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState(''); // For displaying error messages
+  const [successMessage, setSuccessMessage] = useState(''); // For displaying success message
+
+
+  const handleLogin = async (e) => {
+    setErrorMessage(''); // Reset error message
+    setSuccessMessage(''); // Reset success message
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:5000/login', {
+        email,
+        password
+      });
+      console.log(response.data);
+      const { username, token } = response.data;
+      // Handle successful login (e.g., store token, redirect)
+      localStorage.setItem('username', username);
+      localStorage.setItem('token', token);      
+      router.push("/");
+    } catch (error) {
+      //console.error('Login error:', error.response.data);
+      // Handle errors (e.g., incorrect credentials)
+      setErrorMessage(error.response.data.message);
+    }
+  };
+
+
   return (
     <Flex
       minH={"100vh"}
@@ -36,12 +70,22 @@ export default function SimpleCard() {
           <Stack spacing={4}>
             <FormControl id="email">
               <FormLabel>Email address</FormLabel>
-              <Input type="email" />
+              <Input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}               
+               />
             </FormControl>
 
             <FormControl id="password">
               <FormLabel>Password</FormLabel>
-              <Input type="password" />
+              <Input 
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </FormControl>
 
             
@@ -64,11 +108,13 @@ export default function SimpleCard() {
                     bg: "blue.500",
                   }}
                   width="100%"
+                  onClick={handleLogin}
                 >
                   Sign in
                 </Button>
               </Link>
               <Text>
+                {errorMessage && <div style={{color: 'red'}}>{errorMessage}</div>}
                 <Link href="/" color={"black.400"}>
                   Back
                 </Link>
