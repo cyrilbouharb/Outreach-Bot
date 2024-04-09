@@ -9,7 +9,7 @@ router.get('/auth', async (req, res) => {
       //get the api key from the .env file
       const apiKey = process.env.REQUEST_API_KEY;
       //create the request with the specified parameters
-      const response = await axios.get('https://api.apollo.io/v1/auth/health?api_key=S{apiKey}', {
+      const response = await axios.get('https://api.apollo.io/v1/auth/health?api_key=${apiKey}', {
         headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'no-cache',
@@ -33,6 +33,7 @@ router.get('/auth', async (req, res) => {
       // Log the request body
       console.log("Received search request", userData); 
       // Format the data inputted by the user **coordinate with the frontend team on how this is structured**
+      // Need examples of correct formatting in the UI for the parameters
       const data = {
         api_key: process.env.REQUEST_API_KEY,
         q_organization_domains: userData.body.domain,
@@ -46,7 +47,7 @@ router.get('/auth', async (req, res) => {
         'Cache-Control': 'no-cache',
       }
       });
-      //insert into the database here? If so we can filter on the people and take the id, first name, last name, of people with verified emails, get Cyril's opinion
+
       //From the response, take the people who have a verified email status
       const verifiedPeople = apiResponse.data.people.filter(person => person.email_status.equals("verified")); 
 
@@ -58,12 +59,20 @@ router.get('/auth', async (req, res) => {
         title: person.title
       }));
 
-      //For all the mapped people, insert them into our database
+      //For all the mapped people, get the email and insert them into our database
+      for (const person of peopleData) {
+        const person_email = await enrichProspect(person);
+        person.email = person_email; 
+      }
+
+      //For all the people that are now enriched, insert their information into the db
       for (const person of peopleData) {
         try {
             const newUser = await pool.query(
-                "INSERT INTO users (first_name, last_name, user_id, title) VALUES ($1, $2, $3, $4) RETURNING *",
-                [person.firstName, person.lastName, person.id, person.title]
+              //go over this because we need a new table that isn't users
+              //After creating the table we could just add the email to a created prospect
+                "INSERT INTO prospects (apollo_id, first_name, last_name, job_title, email, enriched) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+                [person.firstName, person.lastName, person.id, person.title, person.email, true]
             );
             console.log(`Inserted:`, newUser.rows[0]);
         } catch (error) {
@@ -71,34 +80,31 @@ router.get('/auth', async (req, res) => {
         }
       }
 
-      res.json(response.data); 
+      //Return the array of people data
+      res.json(peopleData); 
     } catch (error) {
       console.error('Error in search route:', error);
       res.status(500).send('An error occurred while processing your request');
     }
   });
 
-  //endpoint for enriching a single person
-  router.get('/enrich', async (req, res) => {
-    try {
-      const apiKey = process.env.REQUEST_API_KEY;
-      //get the data from the database here?
-    } catch (error) {
-      
+  // Function to enrich a single person
+  async function enrichProspect(prospect) {
+    const data = {
+      api_key: process.env.REQUEST_API_KEY,
+      id: prospect.id,
+      first_name: prospect.first_name,
+      last_name: prospect.last_name
+    };
+    //make a request to the database
+    const apiResponse = await axios.post('https://api.apollo.io/v1/people/match', data, {
+      headers: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
     }
-  });
-
-  //endpoint for enriching multiple people
-  router.get('/bulk_enrich', async (req, res) => {
-    try {
-      const apiKey = process.env.REQUEST_API_KEY;
-
-    } catch (error) {
-      
-    }
-  });
+    });
+    //return the person's email from the 
+    return apiResponse.data.person.email;
+  }
   
   module.exports = router;
-
-
-
