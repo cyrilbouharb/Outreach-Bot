@@ -3,12 +3,12 @@ const axios = require('axios');
 const router = express.Router();
 const pool = require("./db");
 
-//method to test the authorization endpoint
+//Method to test the authorization endpoint
 router.get('/auth', async (req, res) => {
     try {
-      //get the api key from the .env file
+      //Get the api key from the .env file
       const apiKey = process.env.REQUEST_API_KEY;
-      //create the request with the specified parameters
+      //Create the request with the specified parameters
       const response = await axios.get('https://api.apollo.io/v1/auth/health?api_key=${apiKey}', {
         headers: {
         'Content-Type': 'application/json',
@@ -16,37 +16,42 @@ router.get('/auth', async (req, res) => {
         'x-api-key': process.env.REQUEST_API_KEY,
       }
       });
-      //log the response
+      //Log the response
       console.log(response.data);
       res.json(response.data);
     } catch (error) {
-      //error handling
+      //Error handling
       console.error('Error connecting to Apollo.io:', error);
       res.status(500).send('Error connecting to Apollo.io');
     }
   });
 
-  //endpoint for searching Apollos database for people. This endpoing will NOT work without a paid subscription
+  //Endpoint that includes searching, enriching, and returning people with enriched information to the UI
   router.post('/search', async (req, res) => {
     try {
       const userData = req.body; 
       // Log the request body
       console.log("Received search request", userData); 
       // Format the data inputted by the user **coordinate with the frontend team on how this is structured**
-      // Need examples of correct formatting in the UI for the parameters
       const data = {
         api_key: process.env.REQUEST_API_KEY,
         q_organization_domains: userData.body.domain,
         organization_locations: userData.body.location,
         person_titles: userData.body.title
       };
-      // create a request to the apollo api
-      const apiResponse = await axios.post('https://api.apollo.io/v1/mixed_people/search', data, {
+      // Create a request to the apollo api
+      try {
+        const apiResponse = await axios.post('https://api.apollo.io/v1/mixed_people/search', data, {
         headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'no-cache',
+        }
+        });
+      } catch (error) {
+        console.error('An error occured when searching:', error);
+        res.status(500).send('Error searching with Apollo.io');
       }
-      });
+      
 
       //From the response, take the people who have a verified email status
       const verifiedPeople = apiResponse.data.people.filter(person => person.email_status.equals("verified")); 
@@ -60,9 +65,14 @@ router.get('/auth', async (req, res) => {
       }));
 
       //For all the mapped people, get the email and insert them into our database
-      for (const person of peopleData) {
-        const person_email = await enrichProspect(person);
-        person.email = person_email; 
+      if(peopleData.length !== 0){
+        for (const person of peopleData) {
+          const person_email = await enrichProspect(person);
+          person.email = person_email; 
+        }
+      }
+      else{
+        res.json("No people matched the search criteria");
       }
 
       //For all the people that are now enriched, insert their information into the db
@@ -77,6 +87,7 @@ router.get('/auth', async (req, res) => {
             console.log(`Inserted:`, newUser.rows[0]);
         } catch (error) {
             console.error('Error inserting data:', error);
+            res.status(500).send('Error inserting data in the database');
         }
       }
 
@@ -88,7 +99,7 @@ router.get('/auth', async (req, res) => {
     }
   });
 
-  // Function to enrich a single person
+  // Function to enrich a single person and get their email 
   async function enrichProspect(prospect) {
     const data = {
       api_key: process.env.REQUEST_API_KEY,
@@ -97,13 +108,19 @@ router.get('/auth', async (req, res) => {
       last_name: prospect.last_name
     };
     //make a request to the database
-    const apiResponse = await axios.post('https://api.apollo.io/v1/people/match', data, {
+    try {
+      const apiResponse = await axios.post('https://api.apollo.io/v1/people/match', data, {
       headers: {
-      'Content-Type': 'application/json',
-      'Cache-Control': 'no-cache',
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+      }
+      });
+    } catch (error) {
+      console.error('Error in enrichment route:', error);
+      res.status(500).send('Error enriching with Apollo.io');
     }
-    });
-    //return the person's email from the 
+    
+    //return the person's email
     return apiResponse.data.person.email;
   }
   
