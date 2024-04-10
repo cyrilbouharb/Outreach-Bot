@@ -79,7 +79,7 @@ app.post('/signup', async (req, res) => {
     const verificationToken = uuidv4(); // Generate a unique verification token
     // Insert user into database with verification token
     const newUser = await pool.query(
-      "INSERT INTO users (first_name, last_name, email, encrypted_password, verification_token) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      "INSERT INTO users (first_name, last_name, email, encrypted_password, verification_token) VALUES ($1, $2, $3, $4, $5) RETURNING *",
       [first_name, last_name, email, hashedPassword, verificationToken]
     );
     // Send verification email
@@ -87,7 +87,7 @@ app.post('/signup', async (req, res) => {
       from: 'outreachbot@gmail.com',
       to: email,
       subject: 'Verify Your Email',
-      text: `Please verify your email by clicking on the following link: http://localhost:3000/verify-email?token=${verificationToken}` // Adjust the URL as per your front-end route for email verification
+      text: `Please verify your email by clicking on the following link: http://localhost:3000/email_verification?token=${verificationToken}` // Adjust the URL as per your front-end route for email verification
     };
     transporter.sendMail(mailOptions, function(error, info){
       if (error) {
@@ -268,9 +268,7 @@ app.get('/verify-email', async (req, res) => {
     if (user.rows.length > 0) {
       await pool.query("UPDATE users SET email_verified = TRUE, verification_token = NULL WHERE verification_token = $1", [token]);
       res.send("Email verified successfully.");
-    } else {
-      res.status(400).send("Invalid or expired verification token.");
-    }
+    } 
   } catch (error) {
     console.error(error);
     res.status(500).send("Server error during email verification.");
