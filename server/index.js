@@ -228,7 +228,7 @@ app.post('/forgot-password', async (req, res) => {
           from: 'outreachbot@gmail.com',
           to: email,
           subject: 'Reset Password Link',
-          text: `Hi ${user.rows[0].username},\n we have recieved your sign up request.\n http://localhost:3000/reset-password/${user.rows[0].id}/${token}`
+          text: `Hi ${user.rows[0].username},\n we have recieved your sign up request.\n http://localhost:3000/reset_password?userId=${user.rows[0].id}&token=${token}`
         };
         
         transporter.sendMail(mailOptions, function(error, info){
@@ -241,24 +241,29 @@ app.post('/forgot-password', async (req, res) => {
   
 });
 
-app.post('/reset-password/:id/:token', (req, res) => {
-  const {id, token} = req.params
-  const {password} = req.body
-
+app.post('/reset-password', (req, res) => {
+  const { userId, token } = req.query;
+  const { password } = req.body;
+  console.log(userId)
+  console.log(token)
+  console.log(password);
+  // Your existing logic for verifying the token, hashing the new password, and updating the user record
   try {
-    jwt.verify(token, "jwt_secret_key", async (err, decoded) => {
-      if(err) {
-          return res.json({Status: "Error with token"})
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+      if (err) {
+        return res.status(403).json({ message: "Invalid or expired token" });
       } else {
-        const hashedPassword = await bcrypt.hash(password, 10)
-        // const user = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
-        await pool.query("UPDATE users SET encrypted_password = $1 WHERE id = $2", [hashedPassword, id]);
+        // Assume `userId` is decoded or validated to match an existing user
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await pool.query("UPDATE users SET encrypted_password = $1 WHERE id = $2", [hashedPassword, userId]);
+        res.json({ message: "Password updated successfully" });
       }
-  })}
-  catch (error){
-    res.send({Status: error})
+    });
+  } catch (error) {
+    res.status(500).send({ message: "Server error" });
   }
 });
+
 
 app.get('/verify-email', async (req, res) => {
   try {

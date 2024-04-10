@@ -14,8 +14,34 @@ import {
   useColorModeValue,
   Link,
 } from "@chakra-ui/react";
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
-export default function SimpleCard() {
+
+  export default function ForgotPassword() {
+    const [email, setEmail] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [message, setMessage] = useState('');
+    const router = useRouter(); // useRouter is similar to useNavigate but for Next.js
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        setIsLoading(true);
+        try {
+            const response = await axios.post('http://localhost:5000/forgot-password', { email }); // Ensure this URL matches your backend endpoint
+            console.log(response.data);
+            // Assuming the backend sends back the email in response.data
+            const { email: resEmail } = response.data;
+            localStorage.setItem('email', resEmail); // Assuming you need to store the email in localStorage
+            setIsLoading(false);
+            router.push('/signin'); // Redirect to the signin page, similar to navigate('/login') in React Router
+        } catch (error) {
+            console.error("Forgot Password error:", error);
+            alert('There was an error processing your request.');
+            setIsLoading(false);
+        }
+    };
   return (
     <Flex
       minH={"100vh"}
@@ -36,7 +62,7 @@ export default function SimpleCard() {
           <Stack spacing={4}>
             <FormControl id="email">
               <FormLabel>Email address</FormLabel>
-              <Input type="email" />
+              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
             </FormControl>
 
             <Stack spacing={10}>
@@ -55,6 +81,7 @@ export default function SimpleCard() {
                     bg: "blue.500",
                   }}
                   width="100%"
+                  onClick={handleSubmit}
                 >
                   Reset Password
                 </Button>

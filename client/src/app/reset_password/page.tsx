@@ -14,8 +14,48 @@ import {
   useColorModeValue,
   Link,
 } from "@chakra-ui/react";
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
-export default function SimpleCard() {
+export default function ResetPasswordPage() {
+  const router = useRouter();
+  const [userId, setUserId] = useState('');
+  const [token, setToken] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  useEffect(() => {
+    // Directly parse the window.location.search to extract query parameters
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const userIdParam = urlParams.get('userId');
+      const tokenParam = urlParams.get('token');
+      if (userIdParam && tokenParam) {
+        setUserId(userIdParam);
+        setToken(tokenParam);
+      }
+    }
+  }, []);
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      alert("Passwords don't match.");
+      return;
+    }
+
+    try {
+      await axios.post(`http://localhost:5000/reset-password?userId=${userId}&token=${token}`, { password });
+      alert('Your password has been reset successfully.');
+      // Use Next.js router for redirection
+      router.push('/signin');
+    } catch (error) {
+      alert('Failed to reset password.');
+      console.error('Reset Password error:', error);
+    }
+  };
+
   return (
     <Flex
       minH={"100vh"}
@@ -36,12 +76,12 @@ export default function SimpleCard() {
           <Stack spacing={4}>
             <FormControl id="password">
               <FormLabel>Password</FormLabel>
-              <Input type="password" />
+              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
             </FormControl>
 
             <FormControl id="password2">
               <FormLabel>Re-enter Password</FormLabel>
-              <Input type="password2" />
+              <Input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
             </FormControl>
 
             
@@ -62,6 +102,7 @@ export default function SimpleCard() {
                     bg: "blue.500",
                   }}
                   width="100%"
+                  onClick={handleResetPassword}
                 >
                   Submit New Password
                 </Button>
