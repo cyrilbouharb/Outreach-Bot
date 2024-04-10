@@ -81,8 +81,8 @@ router.get('/auth', async (req, res) => {
             const newUser = await pool.query(
               //go over this because we need a new table that isn't users
               //After creating the table we could just add the email to a created prospect
-                "INSERT INTO prospects (apollo_id, first_name, last_name, job_title, email, enriched) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-                [person.firstName, person.lastName, person.id, person.title, person.email, true]
+                "INSERT INTO prospects (apollo_id, first_name, last_name, job_title, email) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+                [person.firstName, person.lastName, person.id, person.title, person.email]
             );
             console.log(`Inserted:`, newUser.rows[0]);
         } catch (error) {
