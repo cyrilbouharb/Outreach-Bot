@@ -24,28 +24,30 @@ export default function SimpleCard() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState(''); // For displaying error messages
-  const [successMessage, setSuccessMessage] = useState(''); // For displaying success message
 
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e:any) => {
     setErrorMessage(''); // Reset error message
-    setSuccessMessage(''); // Reset success message
     e.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:5000/login', {
-        email,
-        password
-      });
-      console.log(response.data);
-      const { username, token } = response.data;
-      // Handle successful login (e.g., store token, redirect)
-      localStorage.setItem('username', username);
-      localStorage.setItem('token', token);      
-      router.push("/");
-    } catch (error) {
-      //console.error('Login error:', error.response.data);
-      // Handle errors (e.g., incorrect credentials)
-      setErrorMessage(error.response.data.message);
+
+    if (password == "" || email == "") {
+      setErrorMessage("* Please fill all the field!")
+    } else {
+      try {
+        const response = await axios.post('http://localhost:5000/login', {
+          email,
+          password
+        });
+
+        const { username, token } = response.data;
+        // Handle successful login (e.g., store token, redirect)
+        localStorage.setItem('username', username);
+        localStorage.setItem('token', token);      
+        router.push("/");
+      } catch (error) {
+        // Handle errors (e.g., incorrect credentials)
+        setErrorMessage("* " + error.response.data.message);
+      }
     }
   };
 
@@ -87,7 +89,7 @@ export default function SimpleCard() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </FormControl>
-
+            <Text color="#e34f4f" fontFamily="Georgia, serif" fontSize={14}> {errorMessage}</Text>
             
             <Stack spacing={10}>
               <Stack
@@ -113,12 +115,9 @@ export default function SimpleCard() {
                   Sign in
                 </Button>
               </Link>
-              <Text>
-                {errorMessage && <div style={{color: 'red'}}>{errorMessage}</div>}
-                <Link href="/" color={"black.400"}>
-                  Back
-                </Link>
-              </Text>
+              <Link href="/" color={"black.400"}>
+                Back
+              </Link>
             </Stack>
           </Stack>
         </Box>

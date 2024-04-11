@@ -19,7 +19,7 @@ export default function VerifyEmailComponent() {
     }
   }, []); // This effect doesn't depend on dynamic values
 
-  async function verifyToken(token) {
+  async function verifyToken(token: string) {
     axios.get(`http://localhost:5000/verify-email?token=${token}`)
       .then(response => {
         // Assuming the server sends a response body with a success message

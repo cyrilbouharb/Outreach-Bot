@@ -88,4 +88,5 @@ button[type="button"] {
 }
 
 button[type="button"]:hover {
-  background-color: #333333; /* Dark gray for hove
+  background-color: #333333; /* Dark gray for hove */
+}
