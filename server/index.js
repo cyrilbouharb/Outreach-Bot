@@ -215,7 +215,7 @@ app.post('/signup', async (req, res) => {
       res.status(500).send("Server error");
     }
   }
-}); 
+});
 
 
 
@@ -343,7 +343,7 @@ app.post('/forgot-password', async (req, res) => {
           from: 'outreachbot@gmail.com',
           to: email,
           subject: 'Reset Password Link',
-          text: `Hi ${user.rows[0].username},\n we have recieved your sign up request.\n http://localhost:3000/reset_password?userId=${user.rows[0].id}&token=${token}`
+          text: `Hi ${user.rows[0].username},\n we have received your reset password request.\n http://localhost:3000/reset_password?userId=${user.rows[0].id}&token=${token}`
         };
         
         transporter.sendMail(mailOptions, function(error, info){

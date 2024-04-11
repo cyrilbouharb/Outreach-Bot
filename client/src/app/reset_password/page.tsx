@@ -38,7 +38,7 @@ export default function ResetPasswordPage() {
     }
   }, []);
 
-  const handleResetPassword = async (e) => {
+  const handleResetPassword = async (e:any) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       alert("Passwords don't match.");
