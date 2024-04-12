@@ -57,3 +57,8 @@ CREATE TABLE attachments (
   content_type VARCHAR(50),
   data BYTEA
 );
+
+CREATE TABLE blacklisted_tokens (
+  token TEXT PRIMARY KEY,
+  expires_at TIMESTAMP NOT NULL
+);
