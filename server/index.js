@@ -7,33 +7,29 @@ const { body, validationResult } = require('express-validator');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 
-const uploadDirectory = 'ResumeUploads/';
+require('dotenv').config();
 
-const ensureUploadFolderExists = (dir) => {
-  const resolvedDir = path.resolve(dir);
-  if (!fs.existsSync(resolvedDir)) {
-    fs.mkdirSync(resolvedDir, { recursive: true });
-  }
-};
+const bucketName = process.env.BUCKET_NAME;
+const bucketRegion = process.env.BUCKET_REGION;
+const accessKey = process.env.AWS_ACCESS_KEY;
+const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 
-ensureUploadFolderExists(uploadDirectory);
-
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, uploadDirectory);
-  },
-  filename: function(req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + '-' + file.originalname);
+const s3Client = new S3Client({
+  region: bucketRegion,
+  credentials: {
+    accessKeyId: accessKey,
+    secretAccessKey: secretAccessKey
   }
 });
 
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 app.use(cors());
 app.use(express.json());
 
-//Routes//
 const bcrypt = require('bcrypt');
 
 const validateSignup = [
@@ -152,19 +148,26 @@ app.post('/uploadResume', authenticateToken, upload.single('resume'), async (req
   }
 
   const userId = req.user.id;
+  const file = req.file;
+  const key = `resumes/${Date.now()}-${file.originalname}`;
+
+  const putCommand = new PutObjectCommand({
+    Bucket: bucketName,
+    Key: key,
+    Body: file.buffer,
+    ContentType: file.mimetype
+  });
+
   try {
-    const { path, originalname, mimetype, size } = req.file;
-    
+    const {originalname, mimetype, size } = req.file;
     const insertQuery = `
       INSERT INTO resumes (user_id, file_name, file_path, mime_type, size)
       VALUES ($1, $2, $3, $4, $5)
       RETURNING *;
     `;
-    
-    console.log("Attempting to insert resume for user ID:", userId);
-    
-    const newResume = await pool.query(insertQuery, [userId, originalname, path, mimetype, size]);
-    res.json({ message: "Resume uploaded successfully", file: newResume.rows[0] });
+
+    const newResume = await pool.query(insertQuery, [userId, originalname, key, mimetype, size]);
+    res.json({ message: "Resume uploaded successfully", file: newResume.rows[0]});
   } catch (error) {
     console.error('Upload Error:', error.message);
     res.status(500).send("Server error during file upload");
