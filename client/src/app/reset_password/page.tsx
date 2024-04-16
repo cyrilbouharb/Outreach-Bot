@@ -46,7 +46,7 @@ export default function ResetPasswordPage() {
     }
 
     try {
-      await axios.post(`http://localhost:5000/reset-password?userId=${userId}&token=${token}`, { password });
+      await axios.post(`http://localhost:5000/users/reset-password?userId=${userId}&token=${token}`, { password });
       alert('Your password has been reset successfully.');
       // Use Next.js router for redirection
       router.push('/signin');
