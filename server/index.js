@@ -10,6 +10,7 @@ const { body, validationResult } = require('express-validator');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+const handlebars = require('handlebars');
 const uploadDirectory = 'ResumeUploads/';
 app.use('/resumes', express.static('ResumeUploads'));
 const axios = require('axios');
@@ -113,15 +114,7 @@ async function enrichProspect(prospect) {
 }
 
 
-
-
-
-
-
-
-
-
-
+//End of Apollo testing
 ////////////////////////////////////////////////////////////////////////////////////
 
 const ensureUploadFolderExists = (dir) => {
@@ -394,6 +387,37 @@ app.get('/verify-email', async (req, res) => {
     res.status(500).send("Server error during email verification.");
   }
 });
+
+// sending outreach email
+app.get('/send', async (_, res) => {
+  const source = fs.readFileSync('template.html', 'utf-8').toString();
+  const template = handlebars.compile(source);
+  const replacements = {
+    username: 'Change to the username', //change to username
+  };
+  const htmlToSend = template(replacements);
+
+  const info = await transporter.sendMail({
+    from: 'outreachbot@gmail.com',
+    to: 'cbouharb@umass.edu',
+    subject: 'Outreach Message',
+    text: 'Hello world?', // dont really need this but it is recommended to have a text property as well
+    html: htmlToSend
+  });
+
+  console.log('Message sent: %s', info.response);
+  res.send('Email Sent!');
+});
+
+
+
+
+
+
+
+
+
+
 
 // app.use('/apollo', apolloRouter); 
 
