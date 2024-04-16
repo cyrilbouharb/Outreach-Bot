@@ -108,7 +108,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       {...rest}>
       <Stack spacing={8} mx={"auto"} w="100%" py={12} px={6}>
             <Stack align={"left"}>
-              <Heading align={'center'} fontSize={"4xl"}></Heading>
+              <Heading fontSize={"4xl"}></Heading>
             </Stack>
             <Box
               rounded={"lg"}
@@ -117,29 +117,17 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
               p={8}
             >
               <Stack spacing={4}>
-                <FormControl id="Industry">
-                  <FormLabel>Industry</FormLabel>
-                  <Input isReadOnly={true}/>
-                </FormControl>
                 <FormControl id="Organization">
                   <FormLabel>Organization</FormLabel>
-                  <Input isReadOnly={true}/>
+                  <Input placeholder={localStorage.getItem("organization") || ""}isReadOnly={true}/>
                 </FormControl>
                 <FormControl id="Position">
                   <FormLabel>Position</FormLabel>
-                  <Input isReadOnly={true}/>
-                </FormControl>
-                <FormControl id="Seniority">
-                  <FormLabel>Seniority</FormLabel>
-                  <Input isReadOnly={true}/>
+                  <Input placeholder={localStorage.getItem("position") || ""} isReadOnly={true}/>
                 </FormControl>
                 <FormControl id="Location">
                   <FormLabel>Location</FormLabel>
-                  <Input isReadOnly={true}/>
-                </FormControl>
-                <FormControl id="Degree">
-                  <FormLabel>Degree</FormLabel>
-                  <Input isReadOnly={true}/>
+                  <Input placeholder={localStorage.getItem("location") || ""} isReadOnly={true}/>
                 </FormControl>
               </Stack>
             </Box>
