@@ -99,7 +99,8 @@ const router = useRouter();
 
 const handleSubmit = async (e: { preventDefault: () => void; }) => {
 e.preventDefault();
-console.log("Signup attempted");
+
+
 try {
 const response = await fetch("http://localhost:5000/search", {
 method: "POST",
@@ -163,36 +164,45 @@ boxShadow={"lg"}
 p={8}
 >
 <Stack spacing={4}>
-<FormControl id="Organization">
+<FormControl id="Organization" isRequired>
 <FormLabel>Organization</FormLabel>
 <Input
 type="text"
 placeholder="Organization Domain"
 value={organization}
-onChange={(e) => setOrganization(e.target.value)}
+onChange={(e) => {
+    setOrganization(e.target.value);
+    localStorage.setItem("organization", e.target.value);
+}}
 />
 </FormControl>
-<FormControl id="Title">
+<FormControl id="Title" isRequired>
 <FormLabel>Title</FormLabel>
 <Input
 type="text"
 placeholder="Title"
 value={title}
-onChange={(e) => setTitle(e.target.value)}/>
+onChange={(e) => {
+    setTitle(e.target.value);
+    localStorage.setItem("position", e.target.value);
+    }}/>
 </FormControl>
-<FormControl id="Location">
+<FormControl id="Location" isRequired>
 <FormLabel>Location</FormLabel>
 <Input
 type="text"
 placeholder="Location"
 value={location}
-onChange={(e) => setLocation(e.target.value)}
+onChange={(e) => {
+    setLocation(e.target.value);
+    localStorage.setItem("location", e.target.value);
+}}
 />
 </FormControl>
 
 
 <Stack spacing={10}>
-<Link href="/display_results">
+
 <Button
 loadingText="Submitting"
 size="lg"
@@ -202,11 +212,17 @@ _hover={{
 bg: "blue.500",
 }}
 width="100%"
-onClick={handleSubmit}
+onClick={() => {
+    if(title == "" || location== "" || organization == "" ){
+        alert("Please Fill Out All Fields");
+    } else{
+        handleSubmit;
+    }
+}
+}
 >
 Find Candidates
 </Button>
-</Link>
 <Text>
 <Link href="/home" color={"black.400"}>
 Back
