@@ -14,24 +14,48 @@ var transporter = nodemailer.createTransport({
   });
 
 // sending outreach email
-router.get('/send', async (_, res) => {
-    const source = fs.readFileSync('template.html', 'utf-8').toString();
-    const template = handlebars.compile(source);
-    const replacements = {
-      username: 'Change to the username', //change to username
-    };
-    const htmlToSend = template(replacements);
-  
-    const info = await transporter.sendMail({
-      from: 'outreachbot@gmail.com',
-      to: 'cbouharb@umass.edu', //change this to recipient email address
-      subject: 'Outreach Message',
-      text: 'Hello world?', // dont really need this but it is recommended to have a text property as well
-      html: htmlToSend
-    });
-  
-    console.log('Message sent: %s', info.response);
-    res.send('Email Sent!');
+router.post('/', async (req, res) => {
+    console.log("Here in backend");
+    try {
+        console.log("Received email request", req.body);
+        for (let i = 0; i < req.body.length; i++){
+            const { first_name, last_name,job_title , email } = req.body[i];
+            const source = fs.readFileSync('template.html', 'utf-8').toString();
+            const template = handlebars.compile(source);
+            const replacements = {
+              username: first_name + ' ' + last_name, //change to username
+            };
+            const htmlToSend = template(replacements);
+          
+            const info = await transporter.sendMail({
+              from: 'outreachbot@gmail.com',
+              to: email, //change this to recipient email address
+              subject: 'Outreach Message',
+              text: 'Hello world?', // dont really need this but it is recommended to have a text property as well
+              html: htmlToSend
+            });
+          
+            console.log('Message sent: %s', info.response);
+        }
+        const source = fs.readFileSync('template.html', 'utf-8').toString();
+        const template = handlebars.compile(source);
+        const replacements = {
+          username: "Pooja", //change to username
+        };
+        const htmlToSend = template(replacements);
+      
+        const info = await transporter.sendMail({
+          from: 'outreachbot@gmail.com',
+          to: "poojappatel@umass.edu", //change this to recipient email address
+          subject: 'Outreach Message',
+          text: 'Hello world?', // dont really need this but it is recommended to have a text property as well
+          html: htmlToSend
+        });
+        console.log('Message sent: %s', info.response);
+        res.send('Emails Sent!');
+    } catch(error){
+    console.error('Sending email error:', error);
+    }
   });
   
   module.exports = router;

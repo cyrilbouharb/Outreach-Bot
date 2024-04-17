@@ -41,7 +41,7 @@ router.post('/signup', async (req, res) => {
           console.log('Verification email sent: ' + info.response);
         }
       });
-      res.json(newUser.rows[0]);;
+      res.json(newUser.rows[0]);
     } catch (error) {
       console.error('Signup Error:', error);
       if (error.code === '23505') { // 23505 is the error code for unique violation in PostgreSQL
