@@ -64,7 +64,7 @@ let returnedPeople = [testPerson, testPerson2]
 
 const [selectedUsers, setSelectedUsers] = useState(returnedPeople.map(() => true));
 
-const handleCheckboxChange = (index) => {
+const handleCheckboxChange = (index: number) => {
   const updatedSelections = [...selectedUsers];
   updatedSelections[index] = !updatedSelections[index];
   setSelectedUsers(updatedSelections);

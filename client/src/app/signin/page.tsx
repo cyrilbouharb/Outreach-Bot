@@ -17,6 +17,7 @@ import {
   useColorModeValue,
   Link,
 } from "@chakra-ui/react";
+import { AnyARecord } from 'dns';
 
 export default function SimpleCard() {
   const router = useRouter();
@@ -44,7 +45,7 @@ export default function SimpleCard() {
         localStorage.setItem('username', username);
         localStorage.setItem('token', token);      
         router.push("/");
-      } catch (error) {
+      } catch (error: any) {
         // Handle errors (e.g., incorrect credentials)
         setErrorMessage("* " + error.response.data.message);
       }
