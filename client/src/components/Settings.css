@@ -1,0 +1,92 @@
+
+.settings-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    height:fit-content;    
+    background-color: 	#FFFFFF; /* Changed to gray */
+}
+
+.text{
+    color: black
+}
+
+.cPass {
+  color: black; /* Text color */
+  font-size: 20px; /* Font size */
+  font-weight: bold; /* Font weight */
+  padding: 10px; /* Add padding around the text */
+  border: 2px solid #ccc; /* Add a border with gray color */
+  border-radius: 4px; /* Add border radius for rounded corners */
+  display: inline-block; /* Ensure the box takes up only the necessary space */
+  background-color: #f0f0f0; /* Add a light gray background color */
+}
+
+
+h2 {
+  margin-bottom: 2rem; /* Increase bottom margin for more space */
+  color: #333; /* Slightly darker for emphasis */
+  font-weight: 600; /* Increase weight for boldness */
+  font-size: 26px; /* Increase size for prominence */
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  background-color: #e6e6e6; /* Subtle background for a standout effect */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optional: Adds a subtle shadow for depth */
+}
+
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+button[type="submit"] {
+    padding: 1rem 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #47a8d8; /* Green */
+    color: white;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+button[type="submit"]:hover {
+    background-color: #09496c; /* Green hover */
+}
+
+button[type="button"] {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #000000; /* Black */
+  color: #ffffff; /* White text */
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+button[type="button"]:hover {
+  background-color: #333333; /* Dark gray for hove */
+}
