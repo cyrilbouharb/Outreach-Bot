@@ -52,13 +52,14 @@ export default function DisplayResults() {
     job_title: "Software Engineer",
     email: "adamkaluzny@umass.edu",
   };
+  let returnedPeople = [testPerson, testPerson2];
 
   // let returnedPeople = data;
   // if (returnedPeople === null) {
   //   returnedPeople = [];
   // }
 
-let returnedPeople = [testPerson, testPerson2]
+
 
 
 

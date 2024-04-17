@@ -216,7 +216,7 @@ onClick={() => {
     if(title == "" || location== "" || organization == "" ){
         alert("Please Fill Out All Fields");
     } else{
-        //handleSubmit; for testing purposes
+        // handleSubmit;
         router.push("/display_results");
     }
 }
