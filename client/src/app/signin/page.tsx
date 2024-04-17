@@ -44,7 +44,7 @@ export default function SimpleCard() {
         // Handle successful login (e.g., store token, redirect)
         localStorage.setItem('username', username);
         localStorage.setItem('token', token);      
-        router.push("/");
+        router.push("/home");
       } catch (error: any) {
         // Handle errors (e.g., incorrect credentials)
         setErrorMessage("* " + error.response.data.message);
