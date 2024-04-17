@@ -1,6 +1,7 @@
 'use client'
 
 import React, { ReactNode } from 'react'
+
 import {
   CloseButton,
   Icon,
@@ -37,7 +38,8 @@ import {
 } from 'react-icons/fi'
 import { IconType } from 'react-icons'
 import { ReactText } from 'react'
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 
 
@@ -55,6 +57,7 @@ const LinkItems: Array<LinkItemProps> = [
 
 export default function SimpleSidebar() {
   const { isOpen, onOpen, onClose } = useDisclosure()
+
 
 
   return (
@@ -88,7 +91,20 @@ interface SidebarProps extends BoxProps {
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 
 
-  
+  const [location, setLocation] = useState<string | null>(null);
+  const [organization, setOrganization] = useState<string | null>(null);
+  const [title, setTitle] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.localStorage){
+      setLocation(localStorage.getItem('location'));
+      setOrganization(localStorage.getItem("organization"));
+      setTitle(localStorage.getItem("position"))
+    }
+
+    // Retrieve and parse the stored data from localStorage
+  }, []);
+
   return (
     <Box
       /*borderRight="1px"
@@ -119,15 +135,15 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
               <Stack spacing={4}>
                 <FormControl id="Organization">
                   <FormLabel>Organization</FormLabel>
-                  <Input placeholder={localStorage.getItem("organization") || ""}isReadOnly={true}/>
+                  <Input placeholder={organization || ""}isReadOnly={true}/>
                 </FormControl>
                 <FormControl id="Position">
                   <FormLabel>Position</FormLabel>
-                  <Input placeholder={localStorage.getItem("position") || ""} isReadOnly={true}/>
+                  <Input placeholder={title || ''} isReadOnly={true}/>
                 </FormControl>
                 <FormControl id="Location">
                   <FormLabel>Location</FormLabel>
-                  <Input placeholder={localStorage.getItem("location") || ""} isReadOnly={true}/>
+                  <Input placeholder={location || ''} isReadOnly={true}/>
                 </FormControl>
               </Stack>
             </Box>
