@@ -46,7 +46,7 @@ export default function SignupCard() {
       setErrorMessage("* Please fill all the field!")
     } else {
       try {
-        const response = await axios.post('http://localhost:5000/users/login', {
+        const response = await axios.post('http://localhost:5000/users/signup', {
           first_name, 
           last_name, 
           email, 
