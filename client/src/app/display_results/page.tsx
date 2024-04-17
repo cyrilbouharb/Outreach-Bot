@@ -38,34 +38,60 @@ export default function DisplayResults() {
       localStorage.removeItem('displayData');
     }
   }, []);
+// comment out later
+  let testPerson = {
+    first_name: "John",
+    last_name: "Doe",
+    job_title: "Software Developer",
+    email: "cbouharb@umass.edu"
+  };
 
-  // let testPerson = {
-  //   firstName: "John",
-  //   lastName: "Doe",
-  //   industry: "computing",
-  //   title: "Software Developer",
-  //   company: "Apple",
-  //   location: "CA",
-  //   seniority: "Senior",
-  // };
+  let testPerson2 = {
+    first_name: "Jane",
+    last_name: "Doe",
+    job_title: "Software Engineer",
+    email: "adamkaluzny@umass.edu",
+  };
 
-  // let testPerson2 = {
-  //   firstName: "Jane",
-  //   lastName: "Doe",
-  //   industry: "computing",
-  //   title: "Software Engineer",
-  //   company: "Google",
-  //   location: "WA",
-  //   seniority: "Entry Level",
-  // };
-  let returnedPeople = data;
-  if (returnedPeople === null) {
-    returnedPeople = [];
+  // let returnedPeople = data;
+  // if (returnedPeople === null) {
+  //   returnedPeople = [];
+  // }
+
+let returnedPeople = [testPerson, testPerson2]
+
+
+
+const [selectedUsers, setSelectedUsers] = useState(returnedPeople.map(() => true));
+
+const handleCheckboxChange = (index) => {
+  const updatedSelections = [...selectedUsers];
+  updatedSelections[index] = !updatedSelections[index];
+  setSelectedUsers(updatedSelections);
+};
+const sendEmails = async () => {
+  const emailsToSend = returnedPeople.filter((_, index) => selectedUsers[index]);
+  console.log(emailsToSend);
+  try {
+    const response = await fetch('http://localhost:5000/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(emailsToSend),
+    });
+    const data = await response;
+    if (data.status === 200) {
+      alert("Successfully sent email(s)")
+    }
+    else {
+      alert("Failed to send emails!")
+    }
+    console.log(data);
+  } catch (error) {
+    console.error('Failed to send emails:', error);
   }
-
-  // const router = useRouter();
-
-  //const inputText = router.query.;
+};
 
   return (
     <>
@@ -96,6 +122,8 @@ export default function DisplayResults() {
                   >
                     <Checkbox
                       defaultChecked
+                      isChecked={selectedUsers[i]}
+                      onChange={() => handleCheckboxChange(i)}
                       size="lg"
                       colorScheme="green"
                     ></Checkbox>
@@ -103,7 +131,7 @@ export default function DisplayResults() {
                       {returnedPeople[i].first_name} {returnedPeople[i].last_name}
                     </Text>
                     <Text>
-                      {returnedPeople[i].email} {returnedPeople[i].job_title}
+                       {returnedPeople[i].job_title}
                       {/* {" @ "}
                       {returnedPeople[i].company} */}
                     </Text>
@@ -111,6 +139,7 @@ export default function DisplayResults() {
                 );
               })}
           </SimpleGrid>
+          <Button colorScheme="blue" onClick={sendEmails}>Send Emails</Button>
         </Flex>
       </Flex>
     </>
