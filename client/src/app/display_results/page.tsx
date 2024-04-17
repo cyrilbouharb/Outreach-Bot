@@ -23,20 +23,24 @@ import Sidebar from "../../components/sidebar/sidebar2";
 import { useRouter } from "next/navigation";
 // import { useRouter } from "next/navigation";
 import { useEffect, useState } from 'react';
+
 export default function DisplayResults() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<any| null>(null);
+  const [item, setItem] = useState(null);
   const router = useRouter(); // Use useRouter for navigation
 
   useEffect(() => {
-    // Retrieve and parse the stored data from localStorage
-    const storedData = localStorage.getItem('displayData');
-    console.log(storedData);
-    if (storedData) {
-      setData(JSON.parse(storedData));
-      console.log(data);
-      // Optional: Clear the stored data if it's no longer needed
-      localStorage.removeItem('displayData');
+    if (typeof window !== 'undefined' && window.localStorage){
+      const storedData = localStorage.getItem('displayData');
+      if(storedData){
+        setData(JSON.parse(storedData));
+        console.log(data);
+        localStorage.removeItem('displayData');
+      }
     }
+
+    // Retrieve and parse the stored data from localStorage
+
   }, []);
 // comment out later
   let testPerson = {
@@ -58,6 +62,14 @@ export default function DisplayResults() {
   //   returnedPeople = [];
   // }
 
+
+
+
+// let returnedPeople = data;
+// if (returnedPeople === null){
+//   returnedPeople = [];
+// }
+
 let returnedPeople = [testPerson, testPerson2]
 
 
@@ -70,7 +82,7 @@ const handleCheckboxChange = (index: number) => {
   setSelectedUsers(updatedSelections);
 };
 const sendEmails = async () => {
-  const emailsToSend = returnedPeople.filter((_, index) => selectedUsers[index]);
+  const emailsToSend = returnedPeople.filter((_: any, index: any) => selectedUsers[index]);
   console.log(emailsToSend);
   try {
     const response = await fetch('http://localhost:5000/send', {
