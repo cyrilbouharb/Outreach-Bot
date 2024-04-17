@@ -5,28 +5,36 @@ const request = require('supertest');
 // const app = express();
 
 const createApp = require('../index');
-const app = createApp();
-
-// const { signInHandler, signUpHandler } = require('../src/routes/auth');
+// const createApp = require('../routes/Users.js');
+// const app = createApp();
+const app = require('../index');
+// const app = require('../routes/Users.js');
+// adeebshaik120+1@gmail.com
+// pwd123321
 
 // Mock data for sign-in and sign-up
 // Test user data for signup
 const signUpData = {
 username: 'yunis',
-email: 'yegal@umass.edu',
+email: 'yegal+2@umass.edu',
 password: 'pwd123@321',
 };
 
 // Test user data for login
+// const signInData  = {
+// email: 'adeebshaik120@gmail.com',
+// password: 'pwd321',
+// };
+
 const signInData  = {
-email: 'adeebshaik120@gmail.com',
-password: 'pwd321',
-};
+  email: 'adeebshaik120+1@gmail.com',
+  password: 'pwd123321',
+  };
 
 // Test for sign-up
 test('POST /signup', async () => {
   const response = await request(app)
-    .post('/signup')
+    .post('/users/signup')
     .send(signUpData);
 
   expect(response.statusCode).toBe(200);
@@ -35,7 +43,7 @@ test('POST /signup', async () => {
 // Test for sign-in
 test('POST /login', async () => {
   const response = await request(app)
-    .post('/login')
+    .post('/users/login')
     .send(signInData);
   expect(response.statusCode).toBe(200);
 });
