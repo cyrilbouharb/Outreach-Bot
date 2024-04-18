@@ -2,6 +2,10 @@ import { StockConfig, StockInterval, MediumFormat, WidgetDisplay, IconPositions 
 import MediumImg from "../public/medium.gif";
 import SpotifyImg from "../public/spotify.gif";
 import StockImg from "../public/stock.png";
+import logImg from "../public/log.gif";
+import filterImg from "../public/filter.gif";
+import emailImg from "../public/email.gif";
+
 import QuoteImg from "../public/quote.png"
 import ButtonImg from "../public/button.gif"
 
@@ -216,7 +220,7 @@ export const WIDGET_DISPLAY_SCHEMA: WidgetDisplay[] = [
   {
     id: "log",
     title: "Activities Log",
-    img: MediumImg,
+    img: logImg,
     description:
       "Stay on track with our Activities Log - your timeline for connections and progress",
     path: "/network",
@@ -224,14 +228,14 @@ export const WIDGET_DISPLAY_SCHEMA: WidgetDisplay[] = [
   {
     id: "filtering",
     title: "Filtering Feature",
-    img: StockImg,
+    img: filterImg,
     description: "A filter and search platform for individuals based on specific preferences.",
     path: "/filter",
   },
   {
     id: "mailing",
     title: "Mailing Process",
-    img: SpotifyImg,
+    img: emailImg,
     description:
       "Evaluate communication with professional email template based on preferences",
     path: "/mail",
