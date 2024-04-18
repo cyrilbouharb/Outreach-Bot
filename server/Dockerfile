@@ -1,23 +1,21 @@
-# Use an official Node runtime as a parent image
-FROM node:14
+# Use a specific version of Node.js as the base image
+FROM node:16
 
-# Set the working directory in the container
+# Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json (or yarn.lock)
+# Copy package.json and package-lock.json to utilize Docker layer caching
 COPY package*.json ./
-# If you are using yarn, uncomment the next line
-# COPY yarn.lock ./
+# COPY rds-combined-ca-bundle.pem /usr/src/app/
 
-# Install dependencies
+# Install dependencies in the container, ensuring native dependencies are correctly compiled
 RUN npm install
-# If you are using yarn, replace npm install with yarn install
 
-# Bundle your app's source inside the Docker image
+# Copy the rest of the application code
 COPY . .
 
-# Your app binds to port 3000 so you'll use the EXPOSE instruction to have it mapped by the docker daemon
-EXPOSE 3000
+# Expose the port the application runs on
+EXPOSE 5000
 
-# Define the command to run your app using CMD which defines your runtime
-CMD [ "node", "index.js" ]
+# Specify the command to run the application
+CMD ["node", "index.js"]
