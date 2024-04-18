@@ -17,7 +17,7 @@ test('POST /signup should create a new user and return with status code 200', as
   // Test user data for signup, change yunis email and add one after running tests
   const signUpData = {
     username: 'yunis',
-    email: 'yegal+6@umass.edu',
+    email: 'yegal+20@umass.edu',
     password: 'pwd123@321',
   };
 
@@ -28,7 +28,7 @@ test('POST /signup should create a new user and return with status code 200', as
 });
 
 // Test for sign-in
-test('POST /login should enable a user to login and reutnr with status code 200', async () => {
+test('POST /login should enable a user to login and return with status code 200', async () => {
 
   // Test user data for login
   const signInData  = {
