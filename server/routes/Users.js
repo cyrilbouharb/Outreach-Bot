@@ -34,13 +34,13 @@ router.post('/signup', async (req, res) => {
         subject: 'Verify Your Email',
         text: `Please verify your email by clicking on the following link: http://localhost:3000/email_verification?token=${verificationToken}` // Adjust the URL as per your front-end route for email verification
       };
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Verification email sent: ' + info.response);
-        }
-      });
+      // added await
+      try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Verification email sent: ' + info.response);
+      } catch (error) {
+        console.log(error);
+      }
       res.json(newUser.rows[0]);
     } catch (error) {
       console.error('Signup Error:', error);
