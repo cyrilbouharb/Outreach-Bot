@@ -21,7 +21,7 @@ export default function Nav() {
             src={logo}
             alt=" logo"
             onClick={() => {
-              router.push("/");
+              router.push("/home");
             }}
             style={{ cursor: "pointer" }}
           />
@@ -31,12 +31,6 @@ export default function Nav() {
               <Button onClick={toggleColorMode}>
                 {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
               </Button>
-              <a href="/signin">
-                <Button rightIcon={<FaSignInAlt />}>Sign In</Button>
-              </a>
-              <a href="/signup">
-                <Button>Sign Up</Button>
-              </a>
             </Stack>
           </Flex>
         </Flex>
