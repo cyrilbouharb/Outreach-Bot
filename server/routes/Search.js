@@ -48,7 +48,7 @@ async function authenticate(apiKey) {
         });
         let verifiedPeople = apiResponse.data.people.filter(person => person.email_status === "verified");
         if (apiResponse.data.pagination.total_entries > 1){
-            verifiedPeople = verifiedPeople.slice(0, 1); //change parameter later when deployed or something
+            verifiedPeople = verifiedPeople.slice(0, 3); //change parameter later when deployed or something
         }
         const peopleData = await Promise.all(verifiedPeople.map(async (person) => {
             const person_email = await enrichProspect(person);

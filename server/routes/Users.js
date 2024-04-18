@@ -31,7 +31,7 @@ router.post('/signup', async (req, res) => {
       var mailOptions = {
         from: 'outreachbot@gmail.com',
         to: email,
-        subject: 'Verify Your Email',
+        subject: 'Verify Your Email', // https://outreach-bot-vercel.vercel.app/email_verification?token=${verificationToken}
         text: `Please verify your email by clicking on the following link: http://localhost:3000/email_verification?token=${verificationToken}` // Adjust the URL as per your front-end route for email verification
       };
       transporter.sendMail(mailOptions, function(error, info){
@@ -115,7 +115,7 @@ router.post('/signup', async (req, res) => {
           var mailOptions = {
             from: 'outreachbot@gmail.com',
             to: email,
-            subject: 'Reset Password Link',
+            subject: 'Reset Password Link', // https://outreach-bot-vercel.vercel.app 
             text: `Hi ${user.rows[0].username},\n we have received your reset password request.\n http://localhost:3000/reset_password?userId=${user.rows[0].id}&token=${token}`
           };
           
