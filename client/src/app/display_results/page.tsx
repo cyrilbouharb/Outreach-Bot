@@ -65,12 +65,12 @@ export default function DisplayResults() {
 
 
 
-// let returnedPeople = data;
-// if (returnedPeople === null){
-//   returnedPeople = [];
-// }
+let returnedPeople = data;
+if (returnedPeople === null){
+  returnedPeople = [];
+}
 
-let returnedPeople = [testPerson, testPerson2]
+//let returnedPeople = [testPerson, testPerson2]
 
 
 

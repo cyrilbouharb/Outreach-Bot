@@ -107,7 +107,7 @@ const router = useRouter();
     //e.preventDefault();
     console.log("handle submit is running");
     try {
-      const response = await fetch("http://localhost:5000/search", {
+      const response = await fetch("https://outreach-bot-e8521e90ac6b.herokuapp.com/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ organization, location, title }),
@@ -165,7 +165,7 @@ borderRightColor={useColorModeValue('gray.200', 'gray.700')}*/
         >
           <Stack spacing={4}>
             <FormControl id="Organization" isRequired>
-              <FormLabel>Organization</FormLabel>
+              <FormLabel>Organization Domain (ex. google.com)</FormLabel>
               <Input
                 type="text"
                 placeholder="Organization Domain"
@@ -180,7 +180,7 @@ borderRightColor={useColorModeValue('gray.200', 'gray.700')}*/
               />
             </FormControl>
             <FormControl id="Title" isRequired>
-              <FormLabel>Title</FormLabel>
+              <FormLabel>Job Title</FormLabel>
               <Input
                 type="text"
                 placeholder="Title"
@@ -195,7 +195,7 @@ borderRightColor={useColorModeValue('gray.200', 'gray.700')}*/
               />
             </FormControl>
             <FormControl id="Location" isRequired>
-              <FormLabel>Location</FormLabel>
+              <FormLabel>Location - State, Country (ex. California, US)</FormLabel>
               <Input
                 type="text"
                 placeholder="Location"
@@ -223,9 +223,9 @@ borderRightColor={useColorModeValue('gray.200', 'gray.700')}*/
                   if (title == "" || location == "" || organization == "") {
                     alert("Please Fill Out All Fields");
                   } else {
-                    //handleSubmit(); 
+                    handleSubmit(); 
                     //for testing purposes
-                    router.push("/display_results");
+                    //router.push("/display_results");
                   }
                 }}
               >
