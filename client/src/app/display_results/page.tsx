@@ -143,9 +143,9 @@ const sendEmails = async () => {
                       {returnedPeople[i].first_name} {returnedPeople[i].last_name}
                     </Text>
                     <Text>
-                       {returnedPeople[i].job_title}
-                      {/* {" @ "}
-                      {returnedPeople[i].company} */}
+                       {returnedPeople[i].title}
+                      {" @ "}
+                      {returnedPeople[i].organization.name}
                     </Text>
                   </Box>
                 );
