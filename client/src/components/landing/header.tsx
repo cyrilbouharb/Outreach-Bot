@@ -21,7 +21,7 @@ export default function Nav() {
             src={logo}
             alt=" logo"
             onClick={() => {
-              router.push("/");
+              router.push("/home");
             }}
             style={{ cursor: "pointer" }}
           />

@@ -5,7 +5,7 @@ import {
 } from "@chakra-ui/react";
 import HeroLanding from "../../components/landing/hero";
 import WidgetDisplay from "../../components/landing/display";
-import NavHead from "../../components/landing/header2";
+import NavHead from "../../components/landing/header";
 import Footer from "../../components/landing/footer";
 import Features from "../../components/landing/features";
 

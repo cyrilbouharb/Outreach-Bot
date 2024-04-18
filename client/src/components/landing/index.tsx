@@ -5,7 +5,7 @@ import {
 } from "@chakra-ui/react";
 import HeroLanding from "./hero";
 import WidgetDisplay from "./display";
-import NavHead from "./header";
+import NavHead from "./header2";
 import Footer from "./footer";
 import Features from "./features";
 
