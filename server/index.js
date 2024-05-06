@@ -28,11 +28,13 @@ const userRoute = require("./routes/Users");
 const searchRoute = require("./routes/Search");
 const sendEmailRoute = require("./routes/SendEmail");
 const documentRoute = require("./routes/Documents");
+const templateRoute = require("./routes/Templates");
 
 app.use('/users', userRoute);
 app.use('/search', searchRoute);
 app.use('/send', sendEmailRoute);
 app.use('/documents', documentRoute);
+app.use("/templates",templateRoute);
 
 module.exports = app;
 
