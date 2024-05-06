@@ -238,7 +238,7 @@ export const WIDGET_DISPLAY_SCHEMA: WidgetDisplay[] = [
     img: emailImg,
     description:
       "Evaluate communication with professional email template based on preferences",
-    path: "/mail",
+    path: "/email_template",
   },
 
   // {
