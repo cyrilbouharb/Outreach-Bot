@@ -107,7 +107,7 @@ export default function WithSpeechBubbles() {
     const [selectedTemplate, setSelectedTemplate] = useState(null);
     const [subject, setSubject] = useState('');
     const [body, setBody] = useState('');
-    let outputEmail = '';
+    let outputEmail = body;
     const router = useRouter(); // Use useRouter for navigation
     const pathname = usePathname();
 
@@ -119,7 +119,7 @@ export default function WithSpeechBubbles() {
           content: body,
           onUpdate({ editor }) {
             outputEmail = editor.getText();
-            //console.log(outputEmail);
+            console.log(outputEmail);
         },
 
         })

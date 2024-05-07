@@ -70,13 +70,18 @@ router.post('/sendEmail', async (req, res) => {
 
   try {
     for (let i =0; i<personArr.length; ++i){
-      let modifiedBody = ("Dear " + personArr[i].first_name + " " + personArr[i].last_name + ", \n \n" + body);
+      const replacements = {
+               username: personArr[i].first_name + ' ' + personArr[i].last_name,
+               body: body
+             };
+      const htmlToSend = template(replacements);
+      // let modifiedBody = ("Dear " + personArr[i].first_name + " " + personArr[i].last_name + ", \n \n" + body);
           let info = await transporter.sendMail({
           from: 'outreachbot@gmail.com',
           to: personArr[i].email,
           //to: 'cbouharb@umass.edu', //change to 'to' when sending actually
           subject: subject,
-          html: modifiedBody
+          html: htmlToSend
       });
       console.log('Message sent: %s', info.response);
     }
@@ -85,4 +90,65 @@ router.post('/sendEmail', async (req, res) => {
       res.status(500).send({ message: 'Failed to send email', error });
   }
 });
+function template(replacements) {
+  return `<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            color: #333;
+            font-size: 24px;
+            margin: 0;
+        }
+        .content {
+            margin-bottom: 30px;
+        }
+        .content p {
+            margin: 0 0 10px;
+            line-height: 1.5;
+        }
+        .footer {
+            text-align: center;
+        }
+        .footer p {
+            color: #999;
+            font-size: 14px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Dear, ${replacements.username}!</h1>
+        </div>
+        <div class="content">
+            <p>${replacements.body}</p>
+            <p>Please check the resume.</p>
+        </div>
+        <div class="footer">
+            <p>Best regards,</p>
+            <p>OutreachBot</p>
+        </div>
+    </div>
+</body>
+</html>`;
+}
+
   module.exports = router;
