@@ -1,4 +1,5 @@
 "use client";
+
 // import { useState, useEffect } from 'react';
 // import ReactQuill from 'react-quill';
 // import 'react-quill/dist/quill.snow.css'; // Include the styles for Quill
@@ -93,26 +94,47 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import NavHead from "../../components/landing/header";
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation'
+import { useState, useEffect, Suspense} from 'react';
+import { usePathname } from 'next/navigation';
 import ReactQuill from 'react-quill';
-import { useRouter } from "next/navigation";
+import {useRouter } from "next/navigation";
 import 'react-quill/dist/quill.snow.css'; // Include the styles for Quill
+import { useEditor, EditorContent } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
 
 export default function WithSpeechBubbles() {
     const [templates, setTemplates] = useState([]);
     const [selectedTemplate, setSelectedTemplate] = useState(null);
     const [subject, setSubject] = useState('');
     const [body, setBody] = useState('');
-    const searchParams = useSearchParams()
+    let outputEmail = '';
     const router = useRouter(); // Use useRouter for navigation
+    const pathname = usePathname();
+
+    const Tiptap = () => {
+        const editor = useEditor({
+          extensions: [
+            StarterKit,
+          ],
+          content: body,
+          onUpdate({ editor }) {
+            outputEmail = editor.getText();
+            //console.log(outputEmail);
+        },
+
+        })
+
+        return (
+            <EditorContent editor={editor} />
+        )
+      }
 
     useEffect(() => {
         fetch('http://localhost:5000/templates')
             .then(response => response.json())
             .then(data => {
                 setTemplates(data);
-                const s = searchParams.get('s')
+                let s = window.location.href.substring(window.location.href.indexOf('=') + 1);
                 if (data.length > 0 && s != null) {
                     setSelectedTemplate(data[0]);
                     setSubject(data[s].subject);
@@ -138,7 +160,7 @@ export default function WithSpeechBubbles() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 subject: subject,
-                body: body,
+                body: outputEmail,
                 to: 'cbouharb@umass.edu' // this will depend on your UI form
             })
         });
@@ -170,7 +192,7 @@ export default function WithSpeechBubbles() {
                     }
                 }}
             />
-            <ReactQuill
+            {/* <ReactQuill
                 theme="snow"
                 value={body}
                 onChange={setBody}
@@ -178,7 +200,11 @@ export default function WithSpeechBubbles() {
                 modules={{ toolbar: true }}  // Ensure that the toolbar is enabled or configure as needed
                 formats={['header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'list', 'bullet', 'indent', 'link', 'image', 'color']}
                 
-            />
+            /> */}
+
+            <Tiptap />
+           
+
             <Button
                 top={5}
                 onClick={handleSendEmail}

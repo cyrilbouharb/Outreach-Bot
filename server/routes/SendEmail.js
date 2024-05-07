@@ -70,7 +70,7 @@ router.post('/sendEmail', async (req, res) => {
 
   try {
     for (let i =0; i<personArr.length; ++i){
-      let modifiedBody = ("Dear " + personArr[i].first_name + " " + personArr[i].last_name + ", " + body);
+      let modifiedBody = ("Dear " + personArr[i].first_name + " " + personArr[i].last_name + ", \n \n" + body);
           let info = await transporter.sendMail({
           from: 'outreachbot@gmail.com',
           to: personArr[i].email,
