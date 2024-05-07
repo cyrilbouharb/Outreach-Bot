@@ -126,19 +126,6 @@ const Toolbar = ({ editor, content }: Props) => {
         <button
           onClick={(e) => {
             e.preventDefault();
-            editor.chain().focus().setCode().run();
-          }}
-          className={
-            editor.isActive("code")
-              ? "bg-sky-700 text-white p-2 rounded-lg"
-              : "text-sky-400"
-          }
-        >
-          <Code className="w-5 h-5" />
-        </button>
-        <button
-          onClick={(e) => {
-            e.preventDefault();
             editor.chain().focus().undo().run();
           }}
           className={
