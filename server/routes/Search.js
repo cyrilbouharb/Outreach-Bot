@@ -59,7 +59,7 @@ async function authenticate(apiKey) {
         }));
   
         if (peopleData.length === 0) {
-            return res.json("No people matched the search criteria");
+            return res.send({ message: 'No candidates found, try again'});
         }
   
         // for (const person of peopleData) {

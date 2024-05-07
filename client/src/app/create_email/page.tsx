@@ -96,6 +96,7 @@ import NavHead from "../../components/landing/header";
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation'
 import ReactQuill from 'react-quill';
+import { useRouter } from "next/navigation";
 import 'react-quill/dist/quill.snow.css'; // Include the styles for Quill
 
 export default function WithSpeechBubbles() {
@@ -104,6 +105,7 @@ export default function WithSpeechBubbles() {
     const [subject, setSubject] = useState('');
     const [body, setBody] = useState('');
     const searchParams = useSearchParams()
+    const router = useRouter(); // Use useRouter for navigation
 
     useEffect(() => {
         fetch('http://localhost:5000/templates')
@@ -111,7 +113,7 @@ export default function WithSpeechBubbles() {
             .then(data => {
                 setTemplates(data);
                 const s = searchParams.get('s')
-                if (data.length > 0) {
+                if (data.length > 0 && s != null) {
                     setSelectedTemplate(data[0]);
                     setSubject(data[s].subject);
                     setBody(data[s].body.replace(/(\r\n|\r|\n)/g, '<br>'));
@@ -131,7 +133,7 @@ export default function WithSpeechBubbles() {
 
     const handleSendEmail = async () => {
         // API call to send the email using Nodemailer
-        const response = await fetch('http://localhost:5000/send', {
+        const response = await fetch('http://localhost:5000/send/sendEmail', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -142,7 +144,9 @@ export default function WithSpeechBubbles() {
         });
 
         const result = await response.json();
-        alert('Email sent: ' + result.message);
+        alert(result.message);
+        router.push("/home");
+        
     };
 
 
