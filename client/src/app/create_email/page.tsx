@@ -84,7 +84,7 @@
 //     );
 // }
 
-
+import React from 'react'
 import {
   Box,
   Stack,
@@ -92,6 +92,9 @@ import {
   Input,
   Button,
   useColorModeValue,
+  Link,
+  Text,
+  Flex
 } from '@chakra-ui/react';
 import NavHead from "../../components/landing/header";
 import { useState, useEffect, Suspense} from 'react';
@@ -99,8 +102,11 @@ import { usePathname } from 'next/navigation';
 import ReactQuill from 'react-quill';
 import {useRouter } from "next/navigation";
 import 'react-quill/dist/quill.snow.css'; // Include the styles for Quill
-import { useEditor, EditorContent } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Toolbar from "../../components/tiptap/toolbar";
+import Underline from "@tiptap/extension-underline";
+ 
 
 export default function WithSpeechBubbles() {
     const [templates, setTemplates] = useState([]);
@@ -111,23 +117,54 @@ export default function WithSpeechBubbles() {
     const router = useRouter(); // Use useRouter for navigation
     const pathname = usePathname();
 
-    const Tiptap = () => {
-        const editor = useEditor({
-          extensions: [
-            StarterKit,
-          ],
-          content: body,
-          onUpdate({ editor }) {
-            outputEmail = editor.getText();
-            console.log(outputEmail);
-        },
+    // const Tiptap = () => {
+    //     const editor = useEditor({
+    //         editorProps: {
+    //             attributes: {
+    //             class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none',
+    //             },
+    //         },
+    //       extensions: [
+    //         StarterKit,
+    //       ],
+    //       content: body,
+    //       onUpdate({ editor }) {
+    //         outputEmail = editor.getText();
+    //         console.log(outputEmail);
+    //     },
 
-        })
+    //     })
+
+    //     return (
+    //         <EditorContent editor={editor} height={50}/>
+    //     )
+    //   }
+
+    const Tiptap = ({ onChange, content }: any) => {
+        const handleChange = (newContent: string) => {
+            onChange(newContent);
+        };
+        const editor = useEditor({
+            extensions: [StarterKit, Underline],
+            editorProps: {
+            attributes: {
+                class:
+                "flex flex-col px-4 py-3 justify-start border-b border-r border-l border-gray-700 text-gray-400 w-full gap-3 font-medium text-[16px] pt-4 rounded-bl-md rounded-br-md outline-none",
+                },
+            },
+            content: content,
+            onUpdate: ({ editor }) => {
+            handleChange(editor.getHTML());
+            },
+        });
 
         return (
-            <EditorContent editor={editor} />
-        )
-      }
+            <div className="w-full px-4">
+            <Toolbar editor={editor} content={content}/>
+            <EditorContent style={{ whiteSpace: "pre-line" }} editor={editor} />
+            </div>
+        );
+    };
 
     useEffect(() => {
         fetch('http://localhost:5000/templates')
@@ -142,16 +179,17 @@ export default function WithSpeechBubbles() {
                 }
             })
             .catch(error => console.error('Error fetching templates:', error));
-    }, []);
+        
+        }, []);
 
-    const handleTemplateSelect = (template: any) => {
-        setSelectedTemplate(template);
-        setSubject(template.subject);
+    // const handleTemplateSelect = (template: any) => {
+    //     setSelectedTemplate(template);
+    //     setSubject(template.subject);
     
-        // Ensure HTML new lines are interpreted correctly
-        const formattedBody = template.body.replace(/\n/g, '<br>');
-        setBody(formattedBody);
-    };
+    //     // Ensure HTML new lines are interpreted correctly
+    //     const formattedBody = template.body.replace(/\n/g, '<br>');
+    //     setBody(formattedBody);
+    // };
 
     const handleSendEmail = async () => {
         // API call to send the email using Nodemailer
@@ -171,6 +209,9 @@ export default function WithSpeechBubbles() {
         
     };
 
+    const handleContentChange = (reason: any) => {
+        setBody(reason)
+    }
 
     return (
         <>
@@ -201,12 +242,27 @@ export default function WithSpeechBubbles() {
                 formats={['header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'list', 'bullet', 'indent', 'link', 'image', 'color']}
                 
             /> */}
-
-            <Tiptap />
-           
-
+            <Tiptap
+                onChange={(newContent: string) => handleContentChange(newContent)}
+                content={body}
+            />
+            <Flex flexDirection={'row'} gap={'10px'}>
+                <Button
+                onClick={() => {
+                    router.push('/email_template');
+                }}
+                bg={useColorModeValue("brand.main", "brand.light")}
+                _hover={{
+                bg: useColorModeValue("brand.light", "brand.main"),
+                }}
+                size="lg"
+                boxShadow={"0 5px 30px 0px rgb(63 62 94 / 43%)"}
+                textColor={"brand.bg"}
+                width="100px"
+            >
+                Back
+            </Button>
             <Button
-                top={5}
                 onClick={handleSendEmail}
                 bg={useColorModeValue("brand.main", "brand.light")}
                 _hover={{
@@ -219,7 +275,8 @@ export default function WithSpeechBubbles() {
             >
                 Send Email
             </Button>
-        </Container>
+            </Flex>
+            </Container>
         </Box>
         </>
   );

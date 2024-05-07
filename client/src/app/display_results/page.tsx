@@ -157,7 +157,7 @@ const sendEmails = async () => {
                 );
               })}
           </SimpleGrid>
-          <Button colorScheme="blue" onClick={sendEmails}>Send Emails</Button>
+          <Button colorScheme="blue" onClick={sendEmails}>Create Emails</Button>
         </Flex>
       </Flex>
     </>
