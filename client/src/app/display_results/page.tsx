@@ -69,13 +69,13 @@ export default function DisplayResults() {
 
 
 
-// let returnedPeople = data;
-// if (returnedPeople === null){
-//   returnedPeople = [];
-// }
+let returnedPeople = data;
+if (returnedPeople === null){
+  returnedPeople = [];
+}
 
 
-let returnedPeople = [testPerson, testPerson2]
+//let returnedPeople = [testPerson, testPerson2]
 
 
 
@@ -89,25 +89,23 @@ const handleCheckboxChange = (index: number) => {
 const sendEmails = async () => {
   const emailsToSend = returnedPeople.filter((_: any, index: any) => selectedUsers[index]);
   console.log(emailsToSend);
-  try {
-    const response = await fetch('http://localhost:5000/send/userinfo', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(emailsToSend),
-    });
-    const data = await response;
-    if (data.status === 200) {
-      //alert("Successfully sent email(s)")
+  if (emailsToSend.length ==0){
+    alert("Please select at least one candidate");
+  } else{
+    try {
+      const response = await fetch('http://localhost:5000/send/userinfo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(emailsToSend),
+      });
+      const data = await response;
       router.push("/email_template");
+      console.log(data);
+    } catch (error) {
+      console.error('Failed to send emails:', error);
     }
-    else {
-      //alert("Failed to send emails!")
-    }
-    console.log(data);
-  } catch (error) {
-    console.error('Failed to send emails:', error);
   }
 };
 
