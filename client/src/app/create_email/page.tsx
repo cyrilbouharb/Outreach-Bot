@@ -142,29 +142,25 @@ export default function WithSpeechBubbles() {
 
     const Tiptap = ({ onChange, content }: any) => {
         const handleChange = (newContent: string) => {
-            onChange(newContent);
+            //onChange(newContent);
         };
         const editor = useEditor({
             extensions: [StarterKit, Underline],
             editorProps: {
             attributes: {
                 class:
-                "flex flex-col px-4 py-3 justify-start border-b border-r border-l border-t border-gray-700 text-gray-400 w-full gap-3 font-medium text-[16px] ",
+                "flex flex-col px-4 py-3 justify-start border-b border-r border-l border-gray-700 text-gray-400 w-full gap-3 font-medium text-[16px] pt-4 rounded-bl-md rounded-br-md outline-none",
                 },
             },
             content: content,
-            // onUpdate({ editor }) {
-            //     outputEmail = editor.getText();
-            //     console.log(outputEmail);
-            // },
-            onBlur({ editor, event }) {
-                setBody(editor.getText());
-            },
+            onUpdate({ editor }) {
+            outputEmail = editor.getText();
+        },
         });
 
         return (
             <div className="w-full px-4">
-            {/* <Toolbar editor={editor} content={content}/> */}
+            <Toolbar editor={editor} content={content}/>
             <EditorContent style={{ whiteSpace: "pre-line" }} editor={editor} />
             </div>
         );
@@ -197,7 +193,7 @@ export default function WithSpeechBubbles() {
 
     const handleSendEmail = async () => {
         // API call to send the email using Nodemailer
-        console.log(outputEmail)
+        //console.log(outputEmail)
         const response = await fetch('http://localhost:5000/send/sendEmail', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -231,8 +227,13 @@ export default function WithSpeechBubbles() {
                 borderColor='gray.300'
                 placeholder="Subject"
                 value={subject}
+                //placeholder={subject}
                 onChange={(e) => {
+                    setBody(outputEmail);
                     setSubject(e.target.value);
+                    if (typeof window !== 'undefined'){
+                        localStorage.setItem("organization", e.target.value);
+                    }
                 }}
             />
             {/* <ReactQuill
@@ -244,7 +245,10 @@ export default function WithSpeechBubbles() {
                 formats={['header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'list', 'bullet', 'indent', 'link', 'image', 'color']}
                 
             /> */}
-            <Tiptap content={body} />
+            <Tiptap
+                onChange={(newContent: string) => handleContentChange(newContent)}
+                content={body}
+            />
             <Flex flexDirection={'row'} gap={'10px'}>
                 <Button
                 onClick={() => {
