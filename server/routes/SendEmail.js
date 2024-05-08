@@ -140,7 +140,6 @@ function template(replacements) {
         </div>
         <div class="content">
             <p>${replacements.body}</p>
-            <p>Please check the resume.</p>
         </div>
         <div class="footer">
             <p>Best regards,</p>
