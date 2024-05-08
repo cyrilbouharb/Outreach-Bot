@@ -79,7 +79,7 @@ router.post('/sendEmail', async (req, res) => {
           let info = await transporter.sendMail({
           from: 'outreachbot@gmail.com',
           to: personArr[i].email,
-          //to: 'cbouharb@umass.edu', //change to 'to' when sending actually
+          //to: 'cpickreign@umass.edu', //change to 'to' when sending actually
           subject: subject,
           html: htmlToSend
       });
