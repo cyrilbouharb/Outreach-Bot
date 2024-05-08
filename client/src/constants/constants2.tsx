@@ -223,14 +223,14 @@ export const WIDGET_DISPLAY_SCHEMA: WidgetDisplay[] = [
     img: logImg,
     description:
       "Stay on track with our Activities Log - your timeline for connections and progress",
-    path: "/signin",
+    path: "/network",
   },
   {
     id: "filtering",
     title: "Filtering Feature",
     img: filterImg,
     description: "A filter and search platform for individuals based on specific preferences.",
-    path: "/signin",
+    path: "/filter",
   },
   {
     id: "mailing",
@@ -238,7 +238,7 @@ export const WIDGET_DISPLAY_SCHEMA: WidgetDisplay[] = [
     img: emailImg,
     description:
       "Evaluate communication with professional email template based on preferences",
-    path: "/signin",
+    path: "/home",
   },
 
   // {
