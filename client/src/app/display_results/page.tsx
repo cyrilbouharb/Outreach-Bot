@@ -23,6 +23,7 @@ import Sidebar from "../../components/sidebar/sidebar2";
 import { useRouter } from "next/navigation";
 // import { useRouter } from "next/navigation";
 import { useEffect, useState } from 'react';
+import { Linkedin } from "lucide-react";
 
 export default function DisplayResults() {
   const [data, setData] = useState<any| null>(null);
@@ -48,9 +49,10 @@ export default function DisplayResults() {
     last_name: "Doe",
     title: "Software Developer",
     organization: {
-      name: "software engineer"
+      name: "UMass CICS"
     },
-    email: "cbouharb@umass.edu"
+    email: "cbouharb@umass.edu",
+    linkedin_url: "https://www.linkedin.com/in/cyril-bou-harb-9996a6279/"
   };
 
   let testPerson2 = {
@@ -58,15 +60,22 @@ export default function DisplayResults() {
     last_name: "Doe",
     title: "Software Engineer",
     organization: {
-      name: "software engineer"
+      name: "UMass CICS"
     },
     email: "adamkaluzny@umass.edu",
+    linkedin_url: "https://www.linkedin.com/in/adamkaluzny2/"
   };
 
-
-
-
-
+  let testPerson3 = {
+    first_name: "Jimmy",
+    last_name: "Doe",
+    title: "Software Engineer",
+    organization: {
+      name: "UMass CICS"
+    },
+    email: "cpickreign@umass.edu",
+    linkedin_url: "https://www.linkedin.com/in/chris-pickreign-0305041bb/"
+  };
 
 
 let returnedPeople = data;
@@ -75,7 +84,7 @@ if (returnedPeople === null){
 }
 
 
-//let returnedPeople = [testPerson, testPerson2]
+// let returnedPeople = [testPerson, testPerson2, testPerson3]
 
 
 
@@ -116,7 +125,7 @@ const sendEmails = async () => {
       </Container>
       <Flex>
         <Sidebar />
-        <Flex align={"center"}>
+        <Flex align={"center"} direction="column" width="60%">
           <SimpleGrid
             bg={useColorModeValue("gray.50", "gray.700")}
             columns={2}
@@ -124,6 +133,7 @@ const sendEmails = async () => {
             p="10"
             textAlign="center"
             rounded="lg"
+            width="80%"
           >
             {Array(returnedPeople.length)
               .fill("")
@@ -147,15 +157,29 @@ const sendEmails = async () => {
                       {returnedPeople[i].first_name} {returnedPeople[i].last_name}
                     </Text>
                     <Text>
-                       {returnedPeople[i].title}
+                      {returnedPeople[i].title}
                       {" @ "}
                       {returnedPeople[i].organization.name}
                     </Text>
+                    {returnedPeople[i].linkedin_url && (
+                    <Link href={returnedPeople[i].linkedin_url} isExternal color="blue.500">
+                      LinkedIn
+                    </Link>
+                    )}
                   </Box>
                 );
               })}
           </SimpleGrid>
-          <Button colorScheme="blue" onClick={sendEmails}>Create Emails</Button>
+          <Button
+            colorScheme="blue"
+            mt={8} // Add some top margin
+            size="lg"
+            width="20%" // Adjust width as needed
+            boxShadow="lg"
+            onClick={sendEmails}
+          >
+            Create Emails
+          </Button>
         </Flex>
       </Flex>
     </>
