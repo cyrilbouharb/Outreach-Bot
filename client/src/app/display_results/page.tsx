@@ -90,7 +90,7 @@ const sendEmails = async () => {
   const emailsToSend = returnedPeople.filter((_: any, index: any) => selectedUsers[index]);
   console.log(emailsToSend);
   try {
-    const response = await fetch('http://localhost:5000/send/userinfo', {
+    const response = await fetch('https://outreach-bot-e8521e90ac6b.herokuapp.com/send/userinfo', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

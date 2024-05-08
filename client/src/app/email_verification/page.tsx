@@ -20,7 +20,7 @@ export default function VerifyEmailComponent() {
   }, []); // This effect doesn't depend on dynamic values
 
   async function verifyToken(token: string) {
-    axios.get(`http://localhost:5000/users/verify-email?token=${token}`)
+    axios.get(`https://outreach-bot-e8521e90ac6b.herokuapp.com/users/verify-email?token=${token}`)
       .then(response => {
         // Assuming the server sends a response body with a success message
         alert(response.data.message || "Email verified successfully!");

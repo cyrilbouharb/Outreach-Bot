@@ -7,7 +7,7 @@ function ResumesList() {
     useEffect(() => {
       const fetchResumes = async () => {
         try {
-          const response = await axios.get('http://localhost:5000/api/resumes');
+          const response = await axios.get('https://outreach-bot-e8521e90ac6b.herokuapp.com/api/resumes');
           setResumes(response.data);
         } catch (error) {
           console.error('Failed to fetch resumes:', error);

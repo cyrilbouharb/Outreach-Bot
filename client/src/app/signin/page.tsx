@@ -35,7 +35,7 @@ export default function SimpleCard() {
       setErrorMessage("* Please fill all the field!")
     } else {
       try {
-        const response = await axios.post('http://localhost:5000/users/login', {
+        const response = await axios.post('https://outreach-bot-e8521e90ac6b.herokuapp.com/users/login', {
           email,
           password
         });
@@ -99,7 +99,6 @@ export default function SimpleCard() {
                 align={"start"}
                 justify={"space-between"}
               >
-                <Checkbox>Remember me</Checkbox>
                 <Link color={"blue.400"} href="/forgot_password">Forgot password?</Link>
               </Stack>
               <Link href="/">

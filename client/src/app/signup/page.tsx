@@ -46,7 +46,7 @@ export default function SignupCard() {
       setErrorMessage("* Please fill all the field!")
     } else {
       try {
-        const response = await axios.post('http://localhost:5000/users/signup', {
+        const response = await axios.post('https://outreach-bot-e8521e90ac6b.herokuapp.com/users/signup', {
           first_name, 
           last_name, 
           email, 

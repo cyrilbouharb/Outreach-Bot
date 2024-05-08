@@ -167,7 +167,7 @@ export default function WithSpeechBubbles() {
     };
 
     useEffect(() => {
-        fetch('http://localhost:5000/templates')
+        fetch('https://outreach-bot-e8521e90ac6b.herokuapp.com/templates')
             .then(response => response.json())
             .then(data => {
                 setTemplates(data);
@@ -194,7 +194,7 @@ export default function WithSpeechBubbles() {
     const handleSendEmail = async () => {
         // API call to send the email using Nodemailer
         //console.log(outputEmail)
-        const response = await fetch('http://localhost:5000/send/sendEmail', {
+        const response = await fetch('https://outreach-bot-e8521e90ac6b.herokuapp.com/send/sendEmail', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
