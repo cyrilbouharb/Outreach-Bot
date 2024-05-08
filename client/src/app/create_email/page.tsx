@@ -149,19 +149,22 @@ export default function WithSpeechBubbles() {
             editorProps: {
             attributes: {
                 class:
-                "flex flex-col px-4 py-3 justify-start border-b border-r border-l border-gray-700 text-gray-400 w-full gap-3 font-medium text-[16px] pt-4 rounded-bl-md rounded-br-md outline-none",
+                "flex flex-col px-4 py-3 justify-start border-b border-r border-l border-t border-gray-700 text-gray-400 w-full gap-3 font-medium text-[16px] ",
                 },
             },
             content: content,
-            onUpdate({ editor }) {
-            outputEmail = editor.getText();
-            console.log(outputEmail);
-        },
+            // onUpdate({ editor }) {
+            //     outputEmail = editor.getText();
+            //     console.log(outputEmail);
+            // },
+            onBlur({ editor, event }) {
+                setBody(editor.getText());
+            },
         });
 
         return (
             <div className="w-full px-4">
-            <Toolbar editor={editor} content={content}/>
+            {/* <Toolbar editor={editor} content={content}/> */}
             <EditorContent style={{ whiteSpace: "pre-line" }} editor={editor} />
             </div>
         );
@@ -230,9 +233,6 @@ export default function WithSpeechBubbles() {
                 value={subject}
                 onChange={(e) => {
                     setSubject(e.target.value);
-                    if (typeof window !== 'undefined'){
-                        localStorage.setItem("organization", e.target.value);
-                    }
                 }}
             />
             {/* <ReactQuill
@@ -244,10 +244,7 @@ export default function WithSpeechBubbles() {
                 formats={['header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'list', 'bullet', 'indent', 'link', 'image', 'color']}
                 
             /> */}
-            <Tiptap
-                onChange={(newContent: string) => handleContentChange(newContent)}
-                content={body}
-            />
+            <Tiptap content={body} />
             <Flex flexDirection={'row'} gap={'10px'}>
                 <Button
                 onClick={() => {
