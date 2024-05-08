@@ -19,7 +19,7 @@ export default function Nav() {
             height={80}
             width={130}
             src={logo}
-            alt=" logo"
+            alt="logo"
             onClick={() => {
               router.push("/home");
             }}

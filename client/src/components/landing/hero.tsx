@@ -43,7 +43,7 @@ export default function HeroLanding() {
         </Heading>
         <Text color={"gray.500"} fontSize={"xl"}>
           Welcome to Outreachbot: a networking platform to boost your connection.
-          <br /> No accounts, no plans, 100% open source.
+          <br /> Easy access, no plans, 100% open source
         </Text>
         <Link href="#browse-anchor">
           <Button

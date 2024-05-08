@@ -46,31 +46,36 @@ export default function DisplayResults() {
   let testPerson = {
     first_name: "John",
     last_name: "Doe",
-    job_title: "Software Developer",
+    title: "Software Developer",
+    organization: {
+      name: "software engineer"
+    },
     email: "cbouharb@umass.edu"
   };
 
   let testPerson2 = {
     first_name: "Jane",
     last_name: "Doe",
-    job_title: "Software Engineer",
+    title: "Software Engineer",
+    organization: {
+      name: "software engineer"
+    },
     email: "adamkaluzny@umass.edu",
   };
 
-  // let returnedPeople = data;
-  // if (returnedPeople === null) {
-  //   returnedPeople = [];
-  // }
 
 
 
 
-let returnedPeople = data;
-if (returnedPeople === null){
-  returnedPeople = [];
-}
 
-//let returnedPeople = [testPerson, testPerson2]
+
+// let returnedPeople = data;
+// if (returnedPeople === null){
+//   returnedPeople = [];
+// }
+
+
+let returnedPeople = [testPerson, testPerson2]
 
 
 
@@ -85,7 +90,7 @@ const sendEmails = async () => {
   const emailsToSend = returnedPeople.filter((_: any, index: any) => selectedUsers[index]);
   console.log(emailsToSend);
   try {
-    const response = await fetch('http://localhost:5000/send', {
+    const response = await fetch('http://localhost:5000/send/userinfo', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -94,10 +99,11 @@ const sendEmails = async () => {
     });
     const data = await response;
     if (data.status === 200) {
-      alert("Successfully sent email(s)")
+      //alert("Successfully sent email(s)")
+      router.push("/email_template");
     }
     else {
-      alert("Failed to send emails!")
+      //alert("Failed to send emails!")
     }
     console.log(data);
   } catch (error) {
@@ -151,7 +157,7 @@ const sendEmails = async () => {
                 );
               })}
           </SimpleGrid>
-          <Button colorScheme="blue" onClick={sendEmails}>Send Emails</Button>
+          <Button colorScheme="blue" onClick={sendEmails}>Create Emails</Button>
         </Flex>
       </Flex>
     </>

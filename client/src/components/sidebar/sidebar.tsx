@@ -122,12 +122,15 @@ const router = useRouter();
         localStorage.setItem("displayData", JSON.stringify(data));
       }
       console.log(data);
-      // Reset form fields
-      setLocation("");
-      setOrganization("");
-      setTitle("");
-
-      router.push("/display_results");
+      if (data == "No people matched the search criteria"){
+        alert(data);
+      } else{
+        // Reset form fields
+        setLocation("");
+        setOrganization("");
+        setTitle("");
+        router.push("/display_results");
+      }
       // Optionally, redirect the user or update the UI further here
     } catch (error: any) {
       console.error("Signup error:", error.message);

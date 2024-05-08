@@ -47,6 +47,7 @@ export default function SimpleCard() {
         router.push("/home");
       } catch (error: any) {
         // Handle errors (e.g., incorrect credentials)
+        console.log(error)
         setErrorMessage("* " + error.response.data.message);
       }
     }

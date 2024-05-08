@@ -42,15 +42,6 @@ export default function WidgetDisplayComponent() {
             </WrapItem>
           ))}
         </Wrap>
-        <Heading
-          pt={10}
-          fontWeight={500}
-          fontSize={{ md: "2xl", sm: "6xl" }}
-          lineHeight={"130%"}
-          color={useColorModeValue("brand.main", "brand.bg")}
-        >
-          More Coming Soon...
-        </Heading>
       </Stack>
     </>
   );
