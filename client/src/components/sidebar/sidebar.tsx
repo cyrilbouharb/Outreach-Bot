@@ -122,8 +122,8 @@ const router = useRouter();
         localStorage.setItem("displayData", JSON.stringify(data));
       }
       console.log(data);
-      if (data == "No people matched the search criteria"){
-        alert(data);
+      if (data.message == "No candidates found, try again"){
+        alert("No candidates found, please change inputted filters");
       } else{
         // Reset form fields
         setLocation("");
