@@ -116,7 +116,7 @@ const sendEmails = async () => {
     alert("Please select at least one candidate");
   } else{
     try {
-      const response = await fetch('http://localhost:5000/send/userinfo', {
+      const response = await fetch('https://outreach-bot-e8521e90ac6b.herokuapp.com/send/userinfo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
