@@ -38,7 +38,7 @@ import { useState } from 'react';
           setErrorMessage("* Please fill your email address!")
         }else {
           try {
-              const response = await axios.post('https://outreach-bot-e8521e90ac6b.herokuapp.com/users/forgot-password', { email }); // Ensure this URL matches your backend endpoint
+              const response = await axios.post('http://localhost:5000/users/forgot-password', { email }); // Ensure this URL matches your backend endpoint
               // Assuming the backend sends back the email in response.data
               // const { email: resEmail } = response.data;
               // localStorage.setItem('email', resEmail); // Assuming you need to store the email in localStorage
