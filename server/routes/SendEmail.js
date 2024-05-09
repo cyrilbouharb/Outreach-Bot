@@ -43,6 +43,7 @@ router.post('/userinfo', async (req, res) => {
           
             // console.log('Message sent: %s', info.response);
         }
+        console.log(personArr);
         res.status(200).end();
         // const source = fs.readFileSync('template.html', 'utf-8').toString();
         // const template = handlebars.compile(source);
@@ -79,7 +80,7 @@ router.post('/sendEmail', async (req, res) => {
           let info = await transporter.sendMail({
           from: 'outreachbot@gmail.com',
           to: personArr[i].email,
-          //to: 'cbouharb@umass.edu', //change to 'to' when sending actually
+          //to: 'cpickreign@umass.edu', //change to 'to' when sending actually
           subject: subject,
           html: htmlToSend
       });

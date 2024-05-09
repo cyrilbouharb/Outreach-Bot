@@ -107,7 +107,7 @@ const router = useRouter();
     //e.preventDefault();
     console.log("handle submit is running");
     try {
-      const response = await fetch("https://outreach-bot-e8521e90ac6b.herokuapp.com/search", {
+      const response = await fetch("http://localhost:5000/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ organization, location, title }),
@@ -122,8 +122,8 @@ const router = useRouter();
         localStorage.setItem("displayData", JSON.stringify(data));
       }
       console.log(data);
-      if (data == "No people matched the search criteria"){
-        alert(data);
+      if (data.message == "No candidates found, try again"){
+        alert("No candidates found, please change inputted filters");
       } else{
         // Reset form fields
         setLocation("");
