@@ -107,7 +107,7 @@ const router = useRouter();
     //e.preventDefault();
     console.log("handle submit is running");
     try {
-      const response = await fetch("https://outreach-bot-e8521e90ac6b.herokuapp.com/search", {
+      const response = await fetch("http://localhost:5000/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ organization, location, title }),

@@ -45,8 +45,8 @@ export default function DisplayResults() {
   }, []);
 // comment out later
   let testPerson = {
-    first_name: "John",
-    last_name: "Doe",
+    first_name: "Cyril",
+    last_name: "Bou-Harb",
     title: "Software Developer",
     organization: {
       name: "UMass CICS"
@@ -56,8 +56,8 @@ export default function DisplayResults() {
   };
 
   let testPerson2 = {
-    first_name: "Jane",
-    last_name: "Doe",
+    first_name: "Adam",
+    last_name: "Kaluzny",
     title: "Software Engineer",
     organization: {
       name: "UMass CICS"
@@ -76,15 +76,29 @@ export default function DisplayResults() {
     email: "cpickreign@umass.edu",
     linkedin_url: "https://www.linkedin.com/in/chris-pickreign-0305041bb/"
   };
+  let testPerson4 = {
+    first_name: "Pooja",
+    last_name: "Patel",
+    title: "Software Engineer",
+    organization: {
+      name: "UMass CICS"
+    },
+    email: "poojappatel@umass.edu",
+    linkedin_url: "https://www.linkedin.com/in/poojapatel4/"
+  };
 
 
 let returnedPeople = data;
 if (returnedPeople === null){
   returnedPeople = [];
 }
+if (data != null && data.length<4 && returnedPeople!= null && returnedPeople.length <4){
+  returnedPeople.push(testPerson4);
+}
 
 
-// let returnedPeople = [testPerson, testPerson2, testPerson3]
+
+//let returnedPeople = [testPerson, testPerson2, testPerson3]
 
 
 
@@ -147,8 +161,6 @@ const sendEmails = async () => {
                     key={i}
                   >
                     <Checkbox
-                      defaultChecked
-                      isChecked={selectedUsers[i]}
                       onChange={() => handleCheckboxChange(i)}
                       size="lg"
                       colorScheme="green"

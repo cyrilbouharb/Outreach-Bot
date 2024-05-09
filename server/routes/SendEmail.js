@@ -43,6 +43,7 @@ router.post('/userinfo', async (req, res) => {
           
             // console.log('Message sent: %s', info.response);
         }
+        console.log(personArr);
         res.status(200).end();
         // const source = fs.readFileSync('template.html', 'utf-8').toString();
         // const template = handlebars.compile(source);
