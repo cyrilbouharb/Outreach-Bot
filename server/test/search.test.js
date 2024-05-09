@@ -25,18 +25,19 @@ describe('Search Route Tests', () => {
         expect(response.text).toContain('Authentication failed');
     });
 
-    test('should return "No people matched the search criteria" when no people are found', async () => {
+    test('should return "No candidates found, try again" when no people are found', async () => {
         axios.get.mockResolvedValueOnce({ data: { message: 'Authentication success' } });
         axios.post.mockResolvedValueOnce({ data: { people: [], pagination: { total_entries: 0 } } });
-
+    
         const response = await request(app)
             .post('/')
             .send({ organization: 'Test Org', location: 'Test Location', title: 'Test Title' });
-
+    
         expect(response.status).toBe(200);
-        // Comparing response as text since it's not JSON formatted
-        expect(response.text).toBe("\"No people matched the search criteria\"");
+        // Ensure the response is checking for a JSON object with the correct message
+        expect(response.body.message).toBe('No candidates found, try again');
     });
+    
 
     test('should return the list of people when search is successful', async () => {
         axios.get.mockResolvedValueOnce({ data: { message: 'Authentication success' } });
