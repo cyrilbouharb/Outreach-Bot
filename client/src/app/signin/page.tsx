@@ -47,6 +47,7 @@ export default function SimpleCard() {
         router.push("/home");
       } catch (error: any) {
         // Handle errors (e.g., incorrect credentials)
+        console.log(error)
         setErrorMessage("* " + error.response.data.message);
       }
     }
@@ -98,7 +99,6 @@ export default function SimpleCard() {
                 align={"start"}
                 justify={"space-between"}
               >
-                <Checkbox>Remember me</Checkbox>
                 <Link color={"blue.400"} href="/forgot_password">Forgot password?</Link>
               </Stack>
               <Link href="/">

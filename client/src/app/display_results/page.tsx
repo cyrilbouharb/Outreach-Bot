@@ -23,6 +23,7 @@ import Sidebar from "../../components/sidebar/sidebar2";
 import { useRouter } from "next/navigation";
 // import { useRouter } from "next/navigation";
 import { useEffect, useState } from 'react';
+import { Linkedin } from "lucide-react";
 
 export default function DisplayResults() {
   const [data, setData] = useState<any| null>(null);
@@ -44,33 +45,60 @@ export default function DisplayResults() {
   }, []);
 // comment out later
   let testPerson = {
-    first_name: "John",
-    last_name: "Doe",
-    job_title: "Software Developer",
-    email: "cbouharb@umass.edu"
+    first_name: "Cyril",
+    last_name: "Bou-Harb",
+    title: "Software Developer",
+    organization: {
+      name: "UMass CICS"
+    },
+    email: "cbouharb@umass.edu",
+    linkedin_url: "https://www.linkedin.com/in/cyril-bou-harb-9996a6279/"
   };
 
   let testPerson2 = {
-    first_name: "Jane",
-    last_name: "Doe",
-    job_title: "Software Engineer",
+    first_name: "Adam",
+    last_name: "Kaluzny",
+    title: "Software Engineer",
+    organization: {
+      name: "UMass CICS"
+    },
     email: "adamkaluzny@umass.edu",
+    linkedin_url: "https://www.linkedin.com/in/adamkaluzny2/"
   };
 
-  // let returnedPeople = data;
-  // if (returnedPeople === null) {
-  //   returnedPeople = [];
-  // }
-
-
+  let testPerson3 = {
+    first_name: "Jimmy",
+    last_name: "Doe",
+    title: "Software Engineer",
+    organization: {
+      name: "UMass CICS"
+    },
+    email: "cpickreign@umass.edu",
+    linkedin_url: "https://www.linkedin.com/in/chris-pickreign-0305041bb/"
+  };
+  let testPerson4 = {
+    first_name: "Pooja",
+    last_name: "Patel",
+    title: "Software Engineer",
+    organization: {
+      name: "UMass CICS"
+    },
+    email: "poojappatel@umass.edu",
+    linkedin_url: "https://www.linkedin.com/in/poojapatel4/"
+  };
 
 
 let returnedPeople = data;
 if (returnedPeople === null){
   returnedPeople = [];
 }
+if (data != null && data.length<4 && returnedPeople!= null && returnedPeople.length <4){
+  returnedPeople.push(testPerson4);
+}
 
-//let returnedPeople = [testPerson, testPerson2]
+
+
+//let returnedPeople = [testPerson, testPerson2, testPerson3]
 
 
 
@@ -84,24 +112,23 @@ const handleCheckboxChange = (index: number) => {
 const sendEmails = async () => {
   const emailsToSend = returnedPeople.filter((_: any, index: any) => selectedUsers[index]);
   console.log(emailsToSend);
-  try {
-    const response = await fetch('http://localhost:5000/send', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(emailsToSend),
-    });
-    const data = await response;
-    if (data.status === 200) {
-      alert("Successfully sent email(s)")
+  if (emailsToSend.length ==0){
+    alert("Please select at least one candidate");
+  } else{
+    try {
+      const response = await fetch('http://localhost:5000/send/userinfo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(emailsToSend),
+      });
+      const data = await response;
+      router.push("/email_template");
+      console.log(data);
+    } catch (error) {
+      console.error('Failed to send emails:', error);
     }
-    else {
-      alert("Failed to send emails!")
-    }
-    console.log(data);
-  } catch (error) {
-    console.error('Failed to send emails:', error);
   }
 };
 
@@ -112,7 +139,7 @@ const sendEmails = async () => {
       </Container>
       <Flex>
         <Sidebar />
-        <Flex align={"center"}>
+        <Flex align={"center"} direction="column" width="60%">
           <SimpleGrid
             bg={useColorModeValue("gray.50", "gray.700")}
             columns={2}
@@ -120,6 +147,7 @@ const sendEmails = async () => {
             p="10"
             textAlign="center"
             rounded="lg"
+            width="80%"
           >
             {Array(returnedPeople.length)
               .fill("")
@@ -133,8 +161,6 @@ const sendEmails = async () => {
                     key={i}
                   >
                     <Checkbox
-                      defaultChecked
-                      isChecked={selectedUsers[i]}
                       onChange={() => handleCheckboxChange(i)}
                       size="lg"
                       colorScheme="green"
@@ -143,15 +169,29 @@ const sendEmails = async () => {
                       {returnedPeople[i].first_name} {returnedPeople[i].last_name}
                     </Text>
                     <Text>
-                       {returnedPeople[i].title}
+                      {returnedPeople[i].title}
                       {" @ "}
                       {returnedPeople[i].organization.name}
                     </Text>
+                    {returnedPeople[i].linkedin_url && (
+                    <Link href={returnedPeople[i].linkedin_url} isExternal color="blue.500">
+                      LinkedIn
+                    </Link>
+                    )}
                   </Box>
                 );
               })}
           </SimpleGrid>
-          <Button colorScheme="blue" onClick={sendEmails}>Send Emails</Button>
+          <Button
+            colorScheme="blue"
+            mt={8} // Add some top margin
+            size="lg"
+            width="20%" // Adjust width as needed
+            boxShadow="lg"
+            onClick={sendEmails}
+          >
+            Create Emails
+          </Button>
         </Flex>
       </Flex>
     </>

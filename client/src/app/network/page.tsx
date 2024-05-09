@@ -1,8 +1,11 @@
-export default function Network() {
+'use client'
+import Image from "next/image";
+import comingImg from '../../public/cm.webp'
+import logo from "../../public/logo.png";
+
+export default function Profile() {
+  const coming = require('../../public/logo.png')
   return (
-    <div>
-      <h1>Hello, Activity log!</h1>
-      <h1>Information about activity log</h1>
-    </div>
-  );
+    <Image src={comingImg} width={1700} alt='coming soon'/>
+  )
 }

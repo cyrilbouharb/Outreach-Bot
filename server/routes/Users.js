@@ -116,7 +116,7 @@ router.post('/signup', async (req, res) => {
             from: 'outreachbot@gmail.com',
             to: email,
             subject: 'Reset Password Link',
-            text: `Hi ${user.rows[0].username},\n we have received your reset password request.\n http://localhost:3000/reset_password?userId=${user.rows[0].id}&token=${token}`
+            text: `Hi,\n We have received your reset password request. You can reset your password by clicking on the following link:\n http://localhost:3000/reset_password?userId=${user.rows[0].id}&token=${token}`
           };
           
           transporter.sendMail(mailOptions, function(error, info){

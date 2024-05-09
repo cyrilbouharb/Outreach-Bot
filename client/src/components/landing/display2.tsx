@@ -1,5 +1,5 @@
 'use client'
-import { BG_BLUR_IMAGE, WIDGET_DISPLAY_SCHEMA } from "@/constants/constants";
+import { BG_BLUR_IMAGE, WIDGET_DISPLAY_SCHEMA } from "@/constants/constants2";
 import { WidgetDisplay } from "@/types/types";
 import {
   Box,
