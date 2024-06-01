@@ -62,6 +62,7 @@ export default function Footer() {
         align={{ base: "center", md: "center" }}
       >
         <Text>© 2024 All rights reserved.</Text>
+        <Text> Made with ❤️ in Amherst, MA</Text>
         <Stack direction={"row"} spacing={6} align={"center"}>
           <SocialButton
             label={"Github"}
