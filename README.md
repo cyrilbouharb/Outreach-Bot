@@ -30,11 +30,11 @@ run "node index.js"
 
 website can be visited at: http://localhost:3000
 ## Technologies Used
-Node.js
-Express.js
-Next.js
-Postgres
-Apollo API
+Node.js </br>
+Express.js </br>
+Next.js </br>
+Postgres </br>
+Apollo API </br>
 
 
 https://github.com/cyrilbouharb/Outreach-Bot/assets/55791197/de9d2b0e-a937-4bb6-9621-6844f49eb2b1
